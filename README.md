@@ -1,8 +1,8 @@
 - 👋 Hi, I’m @rcpffm
 - 👀 I’m interested in ...
 - 🌱 I’m currently learning 
-      BASIC + LiteSQL /Android
-- 💞️ I’m looking to collaborate on Python
+      BASIC /Android
+- 💞️ I’m looking to collaborate on Python, JScript and Termux
 - 📫 How to reach me ...
 
 <!---
