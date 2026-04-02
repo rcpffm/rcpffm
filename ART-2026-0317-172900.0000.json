@@ -1,0 +1,36 @@
+{
+  "art": "ART-2026-0317-172900.0000",
+  "key": "ART-2026-0317-172900.0000",
+  "slug": "BRUTALSUCHE_File",
+  "datei_php": "BRUTALSUCHE_File.php",
+  "framework_version": "fw v08.00",
+  "schema_version": "v08.00-3",
+  "artikel_version": "v03.06",
+  "titel": "BRUTALSUCHE_File — GRAPPA Datei- und Inhaltssuche",
+  "beschreibung": "BRUTALSUCHE_File: Datei- und Inhaltssuche für das GRAPPA FREE FRAMEWORK. Glob, Regex, Grep, ART-Key-Index. rcpffm · AGPL-3.0.",
+  "keywords": "GRAPPA, BRUTALSUCHE, Dateisuche, Inhaltssuche, PHP-Tool, ART-Key, rcpffm, AGPL, CMS",
+  "og_titel": "BRUTALSUCHE_File — GRAPPA Datei- und Inhaltssuche",
+  "og_beschreibung": "Datei- und Inhaltssuche im GRAPPA FREE FRAMEWORK. Glob, Regex, Grep, ART-Key-Index. rcpffm · AGPL-3.0.",
+  "autor": "rcpffm + Claude Sonnet 4.6 (Anthropic)",
+  "lizenz": "AGPL-3.0",
+  "sprache": "de",
+  "tool_typ": "PHP-Tool",
+  "degoogle": true,
+  "datum_iso": "2026-03-17T17:29:00Z",
+  "ggstc_erstellt": "-296793.0000",
+  "status": "aktiv",
+  "schema": "GRAPPA-Artikel v08.00",
+  "last_modified": "2026-03-29T12:00:00Z",
+  "bemerkungen": [
+    {
+      "utc": "2026-03-28T07:27:47Z",
+      "was": "JSON durch buildGrappaArtifact() erzeugt · v03.03",
+      "wer": "BRUTALSUCHE_File.php · rcpffm"
+    },
+    {
+      "utc": "2026-03-29T12:00:00Z",
+      "was": "artikel_version v03.03 → v03.06 · Grep-Regex-Fix · Multi-Pattern-Glob · Datei-Oeffner",
+      "wer": "Claude Sonnet 4.6 · rcpffm · Pfadfinder 3"
+    }
+  ]
+}
