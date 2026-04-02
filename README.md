@@ -1,9 +1,13 @@
 - 👋 Hi, I’m @rcpffm
-- 👀 I’m interested in ...
-- 🌱 I’m currently learning 
-     how to handle AI w/ Android devices ONLY, and more and more independent of the bis suppliers ersp. from US / MAGAs
-- 💞️ I’m looking to collaborate on Python, JScript and Termux
-- 📫 How to reach me ...
+- 👀 I’m interested in almost ALL 😁 
+- 🌱 I’m currently learning: 
+*   how to handle AIs (several)  
+w/ Android devices ONLY
+*   and how to get more and more independent of the big PRIVATE SUPPLIERS, esp. from US / MAGAs, 
+using AGPL 3 or FREE Software and Infrastructure - to be independent 
+* 💞️ I’m looking to collaborate on Python, PHP, JScript and Termux
+* I'm using free hoster only, looking for ones, who cannot be blackmailed by US
+* 📫 How to reach me ...
 I'm everywhere and nowhere 🤔👹 
 
 I use telegram as my personal medium for almost anything.
