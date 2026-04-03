@@ -8,7 +8,7 @@
   "artikel_version": "v03.06",
   "titel": "BRUTALSUCHE_File — GRAPPA Datei- und Inhaltssuche",
   "beschreibung": "BRUTALSUCHE_File: Datei- und Inhaltssuche für das GRAPPA FREE FRAMEWORK. Glob, Regex, Grep, ART-Key-Index. rcpffm · AGPL-3.0.",
-  "keywords": "GRAPPA, BRUTALSUCHE, Dateisuche, Inhaltssuche, PHP-Tool, ART-Key, rcpffm, AGPL, CMS",
+  "keywords": "GRAPPA, BRUTALSUCHE, Dateisuche, Inhaltssuche, PHP-Tool, ART-Key, rcpffm, AGPL",
   "og_titel": "BRUTALSUCHE_File — GRAPPA Datei- und Inhaltssuche",
   "og_beschreibung": "Datei- und Inhaltssuche im GRAPPA FREE FRAMEWORK. Glob, Regex, Grep, ART-Key-Index. rcpffm · AGPL-3.0.",
   "autor": "rcpffm + Claude Sonnet 4.6 (Anthropic)",
