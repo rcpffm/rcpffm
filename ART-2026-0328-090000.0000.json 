@@ -1,0 +1,44 @@
+{
+  "art": "ART-2026-0328-090000.0000",
+  "key": "ART-2026-0328-090000.0000",
+  "slug": "GRAPPABRUTAL_JSON_SmartFilter_Editor",
+  "datei_php": "GRAPPABRUTAL_JSON_SmartFilter_Editor.php",
+  "framework_version": "fw v08.00",
+  "artikel_version": "v04.00",
+  "titel": "GRAPPABRUTAL JSON SmartFilter Editor",
+  "titel_en": "GRAPPABRUTAL JSON SmartFilter Editor",
+  "beschreibung": "GRAPPA JSON SmartFilter Editor: JSON-Dateien bis 3 Ebenen tief editieren, Backup, BRUTALSUCHE-Integration. rcpffm · AGPL-3.0.",
+  "beschreibung_en": "GRAPPA JSON SmartFilter Editor: edit JSON files up to 3 levels deep, backup, BRUTALSUCHE integration. rcpffm · AGPL-3.0.",
+  "keywords": "GRAPPA, JSON, Editor, SmartFilter, BRUTALSUCHE, PHP-Tool, rcpffm, AGPL, CMS",
+  "keywords_en": "GRAPPA, JSON, editor, SmartFilter, BRUTALSUCHE, PHP tool, rcpffm, AGPL, CMS",
+  "og_titel": "GRAPPABRUTAL JSON SmartFilter Editor",
+  "og_beschreibung": "JSON-Dateien des GRAPPA FREE FRAMEWORK editieren · Backup · BRUTALSUCHE-Integration · rcpffm · AGPL-3.0.",
+  "og_titel_en": "GRAPPABRUTAL JSON SmartFilter Editor",
+  "og_beschreibung_en": "Edit GRAPPA FREE FRAMEWORK JSON files · backup · BRUTALSUCHE integration · rcpffm · AGPL-3.0.",
+  "autor": "rcpffm + Gemini + Claude Sonnet 4.6 (Anthropic)",
+  "lizenz": "AGPL-3.0",
+  "sprache": "de",
+  "sprachen_verfuegbar": ["de", "en"],
+  "i18n_methode": "data-lang-inline",
+  "tool_typ": "PHP-Tool",
+  "degoogle": true,
+  "datum_iso": "2026-03-28T09:00:00Z",
+  "ggstc_erstellt": "-296793.0000",
+  "status": "aktiv",
+  "schema": "GRAPPA-Artikel v08.00",
+  "relatedTo": ["ART-2026-0317-172900.0000"],
+  "relatedTo_count": 1,
+  "last_modified": "2026-03-29T12:00:00Z",
+  "bemerkungen": [
+    {
+      "utc": "2026-03-28T09:00:00Z",
+      "was": "Erstversion v04.00 · GRAPPA fw v08.00 Retrofit · Pfadfinder 3",
+      "wer": "Claude Sonnet 4.6 · rcpffm"
+    },
+    {
+      "utc": "2026-03-29T12:00:00Z",
+      "was": "PO hat SEO-Values bestaetigt · OP-58 erledigt · ART-Key akzeptiert",
+      "wer": "rcpffm · PO-Abnahme"
+    }
+  ]
+}
