@@ -10,7 +10,7 @@ using AGPL 3 or FREE Software and Infrastructure - to be independent
 * 📫 How to reach me ...
 I'm everywhere and nowhere 🤔👹 
 
-I use telegram as my personal medium for almost anything.
+I use telegram as my personal hub  for almost anything.
 
 I have a mini CMS there:
 
