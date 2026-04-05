@@ -25,3 +25,11 @@ https://t.me/KI_AI_rcpffm
 rcpffm/rcpffm is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 You can click the Preview link to take a look at your changes.
 --->
+
+BE CAREFUL AND ACKNOWLEDGE MY 
+AGPL 3
+DECLARATION, 
+concerning everything having this  Copyright 
+in ANY part of the Grappa Project.
+
+written Easter Sunday 2026
