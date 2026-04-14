@@ -17,9 +17,15 @@ I have a mini CMS there:
 https://t.me/rcpffm_CMS
 public group with themes
 
-and an AI / KI CHANNEL:
+and a public  AI / KI CHANNEL:
 
 https://t.me/KI_AI_rcpffm
+
+and a channel fpr exchanging objects, e.g short videos taken and infos
+
+https://t.me/ch01rcpffm
+
+
 
 <!---
 rcpffm/rcpffm is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
