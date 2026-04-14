@@ -1,0 +1,237 @@
+<?php
+/** ═══════════════════════════════════════════════════════════════
+     GRAPPA FREE FRAMEWORK · AGPL-3.0 · COPYRIGHT NOTICE
+     ═══════════════════════════════════════════════════════════════
+     Copyright (C) 2026 rcpffm
+     https://github.com/rcpffm/rcpffm
+
+     DE: Dieses Werk ist lizenziert unter der
+         GNU Affero General Public License Version 3 (AGPL-3.0).
+         Nutzung, Veränderung und Weitergabe nur unter gleichen Bedingungen.
+         Bei Netzwerk-Nutzung muss der Quellcode zugänglich gemacht werden.
+         Vollständige Lizenz: https://www.gnu.org/licenses/agpl-3.0.html
+
+     EN: This work is licensed under the
+         GNU Affero General Public License Version 3 (AGPL-3.0).
+         Use, modification and distribution only under same terms.
+         Source code must be made available when used over a network.
+         Full license: https://www.gnu.org/licenses/agpl-3.0.html
+
+     ⚠ DE: Das Entfernen oder Ändern dieses Hinweises verletzt AGPL-3.0 §7(b).
+     ⚠ EN: Removing or altering this notice violates AGPL-3.0 §7(b).
+     ═══════════════════════════════════════════════════════════════ -->
+*/
+/**
+ * importantValues()
+ * v02.07 - Fix: Robust File Ops, Silent Handshake & JSON-Encoding for JS
+ */
+function importantValues() {
+    return [
+        'version' => 'v02.07',
+        'author'  => 'rcpffm & misc. AIs',
+        'created' => '2026-04-12 09:40:00 UTC',
+        '_doc'    => '
+### [DE] Logik-Korrekturen v02.07
+1. **Stabilität**: Dateizugriffe (JSON/BAK) sind nun fehlerunterdrückt (@), um Abstürze bei fehlenden Schreibrechten zu verhindern.
+2. **Datentransfer**: PHP-Variablen werden via `json_encode` an JS übergeben (verhindert Syntax-Fehler in JS).
+3. **Regex-Sicherheit**: Nutzt `#` als Delimiter, um Pfad-Slashes `/` ohne Konflikte zu verarbeiten.
+
+### [EN] Logic Fixes v02.07
+1. **Stability**: File operations (JSON/BAK) are now error-suppressed (@) to prevent crashes on restricted filesystems.
+2. **Data Transfer**: PHP variables passed to JS via `json_encode` (prevents JS syntax errors).
+3. **Regex Safety**: Uses `#` as delimiter to handle path slashes `/` without conflicts.
+'
+    ];
+}
+
+$meta = importantValues();
+$version = $meta['version'];
+
+// --- DEFAULTS ---
+$defPath    = '';
+$defPattern = '.*';
+$defSort    = 'time';
+$defDir     = 'desc';
+$defRegex   = 'y';
+
+// --- STABILER HANDSHAKE ---
+// Wir prüfen, ob mind. ein erwarteter Parameter fehlt
+if (!isset($_GET['path']) && !isset($_GET['sort'])) {
+    $jsonDefaults = json_encode([
+        'path'    => $defPath,
+        'pattern' => $defPattern,
+        'sort'    => $defSort,
+        'dir'     => $defDir,
+        'regex'   => $defRegex
+    ]);
+    echo "<script>
+        try {
+            const stored = JSON.parse(localStorage.getItem('lsfilter_params') || '$jsonDefaults');
+            const p = new URLSearchParams();
+            Object.keys(stored).forEach(k => p.set(k, stored[k]));
+            window.location.search = p.toString();
+        } catch(e) { window.location.search = '?path=&sort=time&dir=desc&regex=y&pattern=.*'; }
+    </script>";
+    exit;
+}
+
+// --- PARAMETER-CLEANUP ---
+$relPath  = str_replace(['..', '\\'], '', $_GET['path'] ?? $defPath);
+$relPath  = trim($relPath, '/');
+$pattern  = $_GET['pattern'] ?? $defPattern;
+$sort     = $_GET['sort']    ?? $defSort;
+$dir      = $_GET['dir']     ?? $defDir;
+$useRegex = in_array(strtolower($_GET['regex'] ?? $defRegex), ['1', 'y', 'j'], true);
+
+$basePath = realpath('.'); 
+$currentScanPath = ($relPath === '') ? $basePath : $basePath . DIRECTORY_SEPARATOR . $relPath;
+
+// --- SCAN & FILTER ---
+$fileInfo = [];
+if (is_dir($currentScanPath)) {
+    $items = @scandir($currentScanPath);
+    if ($items) {
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') continue;
+            $fullPath = $currentScanPath . DIRECTORY_SEPARATOR . $item;
+            $isDir    = is_dir($fullPath);
+            
+            // Regex-Check mit '#' statt '/' als Delimiter (robuster für Pfade)
+            $match = true;
+            if ($pattern !== '') {
+                if ($useRegex) {
+                    $match = @preg_match('#' . $pattern . '#i', $item);
+                } else {
+                    $match = (stripos($item, $pattern) !== false);
+                }
+            }
+
+            if ($match) {
+                $fileInfo[] = [
+                    'name'  => $item,
+                    'web'   => ($relPath === '') ? $item : $relPath . '/' . $item,
+                    'time'  => @filemtime($fullPath) ?: 0,
+                    'size'  => $isDir ? 0 : (@filesize($fullPath) ?: 0),
+                    'isDir' => $isDir,
+                    'ext'   => strtolower(pathinfo($item, PATHINFO_EXTENSION))
+                ];
+            }
+        }
+    }
+}
+
+// --- SORTIERUNG ---
+usort($fileInfo, function ($a, $b) use ($sort, $dir) {
+    if ($sort === 'size') $cmp = $a['size'] <=> $b['size'];
+    elseif ($sort === 'time') $cmp = $a['time'] <=> $b['time'];
+    else $cmp = strcasecmp($a['name'], $b['name']);
+    return ($dir === 'asc') ? $cmp : -$cmp;
+});
+
+// --- JSON EXPORT (Silent & Robust) ---
+$jsonPath = $basePath . DIRECTORY_SEPARATOR . 'lsResult.json';
+$bakPath  = $basePath . DIRECTORY_SEPARATOR . 'latest_lsResult.bak';
+
+$exportData = [
+    'meta'    => $meta,
+    'context' => [
+        'script_root' => $basePath,
+        'scan_time'   => date('Y-m-d H:i:s').' UTC',
+        'host'        => $_SERVER['HTTP_HOST'] ?? 'localhost'
+    ],
+    'params'  => ['path' => $relPath, 'pattern' => $pattern, 'sort' => $sort, 'dir' => $dir, 'regex' => $useRegex ? 'y' : 'n'],
+    'results' => $fileInfo
+];
+
+// Fehlerunterdrückung bei Schreibvorgängen
+if (is_writable($basePath)) {
+    if (file_exists($jsonPath)) { @rename($jsonPath, $bakPath); }
+    @file_put_contents($jsonPath, json_encode($exportData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
+
+function headerLink($label, $col, $sort, $dir, $pattern, $regex, $path) {
+    $newDir = ($sort === $col) ? (($dir === 'asc') ? 'desc' : 'asc') : 'asc';
+    $params = ['path' => $path, 'sort' => $col, 'dir' => $newDir, 'pattern' => $pattern, 'regex' => $regex ? 'y' : 'n'];
+    $arrow = ($sort === $col) ? (($dir === 'asc') ? ' ▲' : ' ▼') : '';
+    return '<a href="?' . http_build_query($params) . '" style="text-decoration:none; color:inherit;">' . htmlspecialchars($label) . '<small>' . $arrow . '</small></a>';
+}
+?>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lsfilter <?= $version ?></title>
+<style>
+    body { font-family: sans-serif; margin: 10px; background: #fff; color: #333; font-size: 14px; }
+    .nav-header { background: #f4f4f4; padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px; }
+    .breadcrumb { font-weight: bold; margin-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #eee; text-align: left; padding: 8px; }
+    td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+    .is-dir { font-weight: bold; color: #d32f2f; }
+    .size-col { text-align: right; font-family: monospace; }
+    a { color: #0066cc; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="nav-header">
+    <div class="breadcrumb">
+        📂 /<?= htmlspecialchars($relPath) ?> 
+        <small>[<a href="?path=">🏠 Root</a>]</small>
+    </div>
+    <form method="get">
+        <input type="hidden" name="path" value="<?= htmlspecialchars($relPath) ?>">
+        <input type="hidden" name="sort" value="<?= htmlspecialchars($sort) ?>">
+        <input type="hidden" name="dir" value="<?= htmlspecialchars($dir) ?>">
+        <input type="text" name="pattern" value="<?= htmlspecialchars($pattern) ?>" placeholder="Filter..." style="width:150px;">
+        <select name="regex">
+            <option value="y" <?= $useRegex?'selected':'' ?>>Regex</option>
+            <option value="n" <?= !$useRegex?'selected':'' ?>>Text</option>
+        </select>
+        <button type="submit">Go</button>
+        <a href="?" style="font-size:0.8em; margin-left:10px;">[Reset]</a>
+    </form>
+</div>
+
+<table>
+<thead>
+    <tr>
+        <th><?= headerLink('Name', 'name', $sort, $dir, $pattern, $useRegex, $relPath) ?></th>
+        <th><?= headerLink('Zeit (UTC)', 'time', $sort, $dir, $pattern, $useRegex, $relPath) ?></th>
+        <th class="size-col"><?= headerLink('Größe', 'size', $sort, $dir, $pattern, $useRegex, $relPath) ?></th>
+    </tr>
+</thead>
+<tbody>
+<?php if (empty($fileInfo)): ?>
+    <tr><td colspan="3" style="text-align:center; padding:20px; color:gray;">Keine Dateien gefunden oder Zugriff verweigert.</td></tr>
+<?php endif; ?>
+<?php foreach ($fileInfo as $f): ?>
+    <tr class="<?= $f['isDir'] ? 'is-dir' : '' ?>">
+        <td>
+            <a href="<?= $f['isDir'] ? '?path='.urlencode($f['web']).'&sort='.$sort.'&dir='.$dir.'&pattern='.urlencode($pattern).'&regex='.($useRegex?'y':'n') : htmlspecialchars($f['web']) ?>" <?= $f['isDir'] ? '' : 'target="_blank"' ?>>
+                <?= $f['isDir'] ? '📁' : '📄' ?> <?= htmlspecialchars($f['name']) ?>
+            </a>
+        </td>
+        <td style="font-size:0.85em;"><?= $f['time'] > 0 ? date('d.m.y H:i', $f['time']) : '--' ?></td>
+        <td class="size-col"><?= $f['isDir'] ? 'DIR' : number_format($f['size']/1024, 1).'K' ?></td>
+    </tr>
+<?php endforeach; ?>
+</tbody>
+</table>
+
+<script>
+// PHP-Daten sicher an JS übergeben
+const currentParams = <?= json_encode([
+    'path'    => $relPath,
+    'pattern' => $pattern,
+    'sort'    => $sort,
+    'dir'     => $dir,
+    'regex'   => $useRegex ? 'y' : 'n'
+]) ?>;
+localStorage.setItem('lsfilter_params', JSON.stringify(currentParams));
+</script>
+
+</body>
+</html>
