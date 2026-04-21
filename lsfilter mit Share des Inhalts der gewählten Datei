@@ -1,0 +1,882 @@
+<?php
+// ═══════════════════════════════════════════════════════════════
+//      GRAPPA FREE FRAMEWORK · AGPL-3.0 · COPYRIGHT NOTICE
+// ═══════════════════════════════════════════════════════════════
+//      Copyright (C) 2026 rcpffm
+//      https://github.com/rcpffm/rcpffm
+//
+//      DE: Dieses Werk ist lizenziert unter der
+//          GNU Affero General Public License Version 3 (AGPL-3.0).
+//          Nutzung, Veränderung und Weitergabe nur unter gleichen
+//          Bedingungen. Bei Netzwerk-Nutzung muss der Quellcode
+//          zugänglich gemacht werden.
+//          Vollständige Lizenz:
+//          https://www.gnu.org/licenses/agpl-3.0.html
+//
+//      EN: This work is licensed under the
+//          GNU Affero General Public License Version 3 (AGPL-3.0).
+//          Use, modification and distribution only under same terms.
+//          Source code must be made available when used over a network.
+//          Full license:
+//          https://www.gnu.org/licenses/agpl-3.0.html
+//
+//      ⚠ DE: Das Entfernen oder Ändern dieses Hinweises verletzt
+//             AGPL-3.0 §7(b) und entzieht alle eingeräumten Rechte.
+//      ⚠ EN: Removing or altering this notice violates AGPL-3.0
+//             §7(b) and terminates all granted rights.
+//
+//      NICHT für: Überwachung · Zensur · Autoritäre Regime
+//                 Oligarchen · Putin · Xi · MAGA
+//      NOT for:   Surveillance · Censorship · Authoritarian use
+//                 Oligarchs · Data Hoarders · Surveillance Capitalism
+//
+//      RESILIENCE BY DESIGN — No Single Point of Failure
+//      Distributed · Censorship-Resistant · AGPL-3.0
+// ═══════════════════════════════════════════════════════════════
+//
+//  lsfilter.php · GRAPPA FREE FRAMEWORK
+//  #TAG:GRAPPA-STD #AUTHOR:rcpffm #VER:v04.23
+//  #UTC:2026-04-20T14:00:00Z #GRAPPA:fw v08.00
+//  #LICENSE:AGPL-3.0 #ENCODING:UTF-8-NO-BOM
+//  #ART:ART-2026-0419-090000.0000
+//
+//  NEU v04.22:
+//    + Vollständiger Kirk-Copyright-Block · CR-01..06 · §7(b) AGPL
+//    + SEO DE+EN vollständig (folgt nach PO-Entscheid)
+// ═══════════════════════════════════════════════════════════════
+//      Copyright (C) 2026 rcpffm · https://github.com/rcpffm/rcpffm
+//      DE: AGPL-3.0 · Nutzung/Änderung/Weitergabe nur unter gleichen Bedingungen.
+//      EN: AGPL-3.0 · Use/modification/distribution only under same terms.
+//      ⚠ Entfernen dieses Hinweises verletzt AGPL-3.0 §7(b).
+// ═══════════════════════════════════════════════════════════════
+
+function importantValues(): array {
+    return [
+        'art_nr'            => 'ART-2026-0419-090000.0000',
+        'artikel_version'   => 'v04.23',
+        'framework_version' => 'fw v08.00',
+        'schema_version'    => 'v08.00-3',
+        'titel'             => 'lsfilter · GRAPPA Filesystem-Browser',
+        'subtitle'          => 'lsfilter',
+        'titel_en'          => 'lsfilter · GRAPPA Filesystem Browser',
+        'subtitle_en'       => 'lsfilter',
+        'beschreibung'      => 'lsfilter: Mobiler Filesystem-Browser der Dateien nicht nur anzeigt — sondern ihren Inhalt direkt teilt. Regex-Filter, ART-Key-Erkennung, Server-Diagnose, Volltext-Suche. Für alle die ihr Dateisystem vom Handy aus im Griff haben wollen. Ohne App. Ohne Cloud. Ohne Erklärungsbedarf. AGPL-3.0 · rcpffm.',
+        'beschreibung_en'   => 'lsfilter: A mobile filesystem browser that does not just show files — it shares their content directly. Regex filter, ART-key detection, server diagnostics, full-text search. For everyone who wants their filesystem under control from a phone. No app. No cloud. No explanation needed. AGPL-3.0 · rcpffm.',
+        'keywords'          => 'GRAPPA FREE FRAMEWORK, lsfilter, PHP Filesystem Browser, mobiler Dateimanager, Regex Dateifilter, Share-Pipe PHP, Dateiinhalt teilen Android, ART-Key Erkennung, Server-Diagnose PHP, Volltext-Suche Dateien, AGPL-3.0, Open Source, degoogle, Mobile-First, kein Tracking, rcpffm, verteiltes CMS',
+        'keywords_en'       => 'GRAPPA FREE FRAMEWORK, lsfilter, PHP filesystem browser, mobile file manager, regex file filter, share pipe PHP, share file content Android, ART-key detection, server diagnostics PHP, full-text file search, AGPL-3.0, open source, degoogle, mobile-first, no tracking, rcpffm, distributed CMS, resilient publishing',
+        'og_titel'          => 'lsfilter · Dateien teilen ohne App · GRAPPA · AGPL-3.0',
+        'og_titel_en'       => 'lsfilter · Share files without an app · GRAPPA · AGPL-3.0',
+        'og_beschreibung'   => 'Dateien auflisten, filtern, öffnen — und den Inhalt direkt per Share weiterschicken. Kein Zwischenspeichern. Kein Umweg. Läuft auf jedem PHP-Server. AGPL-3.0.',
+        'og_beschreibung_en'=> 'Glob, regex, grep, ART-index in one PHP tool. AGPL-3.0. Runs on InfinityFree, alwaysdata, and everything in between. No cloud that knows your data better than you do.',
+        'copyright'         => 'Copyright (C) 2026 rcpffm',
+        'lizenz'            => 'AGPL-3.0',
+        'lizenz_url'        => 'https://www.gnu.org/licenses/agpl-3.0.html',
+        'quellcode'         => 'https://github.com/rcpffm/rcpffm',
+        'tool_typ'          => 'PHP-Tool',
+        'slug'              => 'lsfilter',
+        'datei_php'         => 'lsfilter.php',
+        'datei_json'        => 'ART-2026-0419-090000.0000.json',
+        'autor'             => 'rcpffm + Claude Sonnet 4.6 (Anthropic)',
+        'ort'               => 'Rüsselsheim am Main · Keyif-Bar-Sektor',
+        'datum_iso'         => '2026-04-19T09:00:00Z',
+        'last_modified'     => '2026-04-20T15:00:00Z',
+        'sprache'           => 'de',
+        'degoogle'          => true,
+        'relatedTo_count'   => 0,
+        'relatedTo'         => [],
+        'flags'             => ['tool','php','fw-v08','filesystem','mobile','regex','sort','rwd'],
+        'status'            => 'aktiv',
+        'ggstc_erstellt'    => 'n/a',
+    ];
+}
+
+function validateImportantValues(): void {
+    $iv = importantValues();
+    $jf = __DIR__ . '/' . ($iv['datei_json'] ?? '');
+    if (!file_exists($jf)) { echo '<div class="gwarn err">⚠ GRAPPA DRIFT: JSON fehlt · '.htmlspecialchars(basename($jf)).'</div>'; return; }
+    $j = json_decode(file_get_contents($jf), true);
+    if (!$j) return;
+    $map=[['iv'=>'art_nr','json'=>'art'],['iv'=>'artikel_version','json'=>'artikel_version'],
+          ['iv'=>'framework_version','json'=>'framework_version'],['iv'=>'titel','json'=>'titel'],
+          ['iv'=>'datei_php','json'=>'datei_php'],['iv'=>'copyright','json'=>'copyright'],['iv'=>'status','json'=>'status']];
+    $d=[];
+    foreach($map as $p) if(($iv[$p['iv']]??null)!==($j[$p['json']]??null))
+        $d[]=$p['iv'].': IV='.json_encode($iv[$p['iv']],JSON_UNESCAPED_UNICODE).' · JSON='.json_encode($j[$p['json']]??null,JSON_UNESCAPED_UNICODE);
+    if($d){echo '<div class="gwarn err">⚠ GRAPPA DRIFT<br>';foreach($d as $x)echo '&nbsp;'.htmlspecialchars($x).'<br>';echo'</div>';}
+}
+
+function getServerInfo(): array {
+    $h=$_SERVER['HTTP_HOST']??'unknown';
+    $p=(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off')?'https':'http';
+    $s=$_SERVER['SCRIPT_NAME']??'/';
+    return ['host'=>$h,'proto'=>$p,'baseUrl'=>$p.'://'.$h.dirname($s).'/','docRoot'=>$_SERVER['DOCUMENT_ROOT']??'n/a',
+            'phpVer'=>PHP_VERSION,'os'=>PHP_OS,'maxExec'=>ini_get('max_execution_time')?:'n/a','memLimit'=>ini_get('memory_limit')?:'n/a',
+            'openBasedir'=>ini_get('open_basedir')?:'nicht gesetzt','disabledFn'=>ini_get('disable_functions')?:'keine',
+            'realpathOk'=>(realpath('.')!==false),'writeable'=>is_writeable('.')];
+}
+
+// ART-Regex: rcpffm + Gemini · 2026–2399 · Schaltjahre korrekt
+define('ART_JSON_RE','/^ART-((202[6-9]|20[3-9]\d|2[1-3]\d{2})-((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(0[469]|11)(0[1-9]|[12]\d|30)|02(0[1-9]|1\d|2[0-8]))|((20(28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)|(21|22|23)(04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)))-0229)-\d{6}\.\d{4}\.json$/');
+// BUG3-FIX: ERL-Muster — ERL_, ERL1_, ERL01_, ERL2_ etc.
+define('ERL_RE','/^ERL\d*_/i');
+
+class GrappaFilter {
+    public static function getTemplates(): array {
+        return [
+            ['g'=>'typ',  't'=>'HTML/PHP/JS/CSS', 'r'=>'\.(html?|php|js|css)$',   'd'=>'Web-Quelldateien'],
+            ['g'=>'typ',  't'=>'JSON + JSONTXT',  'r'=>'\.(json|jsontxt)$',        'd'=>'Alle JSON inkl. Arbeitsversionen'],
+            ['g'=>'typ',  't'=>'Markdown',         'r'=>'\.md$',                   'd'=>'Alle .md-Dokumente'],
+            ['g'=>'typ',  't'=>'Grappa-Objekte',   'r'=>'^Grappa\d{5}\.(jpg|webp|png|mp4)$','d'=>'Format: Grappa00001.jpg'],
+            ['g'=>'grappa','t'=>'ART-JSON (exakt)','r'=>'^ART-((202[6-9]|20[3-9]\d|2[1-3]\d{2})-((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(0[469]|11)(0[1-9]|[12]\d|30)|02(0[1-9]|1\d|2[0-8]))|((20(28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)|(21|22|23)(04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)))-0229)-\d{6}\.\d{4}\.json$','d'=>'Deploy-fertige ART-*.json'],
+            ['g'=>'grappa','t'=>'ART-JSONTXT',    'r'=>'^ART-\d{4}-\d{4}-\d{6}\.\d{4}(_v\d+[._]\d+)?\.jsontxt$','d'=>'Arbeitsversionen'],
+            // BUG3-FIX: ERL-Muster erweitert
+            ['g'=>'grappa','t'=>'ERL (archiviert)','r'=>'^ERL\d*_',               'd'=>'Archiviert: ERL_, ERL1_, ERL01_ etc.'],
+            ['g'=>'bsp',  't'=>'^ART- (Anfang)',   'r'=>'^ART-',                  'd'=>'^ = Anfang · nur Dateien die mit ART- beginnen'],
+            ['g'=>'bsp',  't'=>'\.php$ (Ende)',    'r'=>'\.php$',                 'd'=>'$ = Ende fest · \\ maskiert den Punkt'],
+            ['g'=>'bsp',  't'=>'v0[34] (Klasse)',  'r'=>'v0[34]',                 'd'=>'[34] = Zeichenklasse · v03 oder v04'],
+            ['g'=>'bsp',  't'=>'(?i)grappa (GK)',  'r'=>'(?i)grappa',             'd'=>'(?i) = Groß/Klein egal'],
+            ['g'=>'bsp',  't'=>'\d{4} (Ziffern)',  'r'=>'\d{4}',                  'd'=>'\\d = Ziffer · {4} = genau 4'],
+            ['g'=>'bsp',  't'=>'(?i)SmartFilter',     'r'=>'(?i)SmartFilter',       'd'=>'(?i) = Groß/Klein egal · findet SmartFilter/SMARTFILTER/smartfilter'],
+            ['g'=>'bsp',  't'=>'Grappa_objekte (GK)', 'r'=>'Grappa_objekte',         'd'=>'Ohne (?i): Groß/Klein UNTERSCHIEDEN · nur "Grappa_objekte" trifft'],
+            ['g'=>'bsp',  't'=>'\\b[A-Z][a-z]* (Wort^)', 'r'=>'\\b[A-Z][a-z]*',   'd'=>'\\b=Wortgrenze · [A-Z]=Großbuchst. · [a-z]*=Kleinbuchst. · ⚠ Umlaute extra: [A-ZÄÖÜa-zäöüß]'],
+            ['g'=>'alle', 't'=>'Alle Dateien',     'r'=>'.*',                     'd'=>'Kein Filter'],
+        ];
+    }
+}
+
+// ── Input ────────────────────────────────────────────────────────
+$relPath = trim(str_replace(['..','\\'],'',$_GET['path']??''),'/');
+$pattern = $_GET['pattern']??'.*';
+$useRegex= ($_GET['mode']??'regex')==='regex';
+// URL-Schnellzugriff: ?q1=, ?q2=, ?q3= — für Favoriten/Links
+$quickPatterns = [
+    1 => urldecode($_GET['q1']??''),
+    2 => urldecode($_GET['q2']??''),
+    3 => urldecode($_GET['q3']??''),
+];
+$quickPatterns = array_filter($quickPatterns); // leere entfernen
+$sortCol = $_GET['sort']??'name';     // name | size | time
+$sortDir = $_GET['dir']??'asc';       // asc | desc
+$sortCol2= $_GET['sort2']??'';        // zweite Sortierspalte
+$sortDir2= $_GET['dir2']??'asc';
+
+// Valide Spalten
+if(!in_array($sortCol,['name','size','time'])) $sortCol='name';
+if(!in_array($sortDir,['asc','desc']))         $sortDir='asc';
+if(!in_array($sortCol2,['name','size','time',''])) $sortCol2='';
+
+$basePath=$_bpw=null;
+$bp=realpath('.');
+if($bp===false){$basePath=__DIR__;$_bpw='realpath() scheiterte · Fallback: __DIR__';}
+else $basePath=$bp;
+$currentPath=($relPath==='')?$basePath:$basePath.DIRECTORY_SEPARATOR.$relPath;
+
+// ── ?action=serverinfo ───────────────────────────────────────────
+if(($_GET['action']??'')==='serverinfo'){
+    $si=getServerInfo();$iv=importantValues();
+    header('Content-Type: text/html; charset=utf-8');
+    echo '<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>lsfilter Server-Info</title>'
+       .'<style>body{font-family:monospace;margin:12px;font-size:12px;background:#111;color:#cfc}h2{color:#ff0;margin:12px 0 6px}table{border-collapse:collapse;width:100%}td{padding:4px 8px;border-bottom:1px solid #333;vertical-align:top}td:first-child{color:#aaa;width:40%}.warn{color:#fa0}a{color:#88f}</style></head><body>';
+    echo '<h2>🔍 lsfilter · Server-Diagnose · '.htmlspecialchars($iv['artikel_version']).'</h2><table>';
+    foreach([['Host',$si['host']],['Protokoll',$si['proto']],['Basis-URL',$si['baseUrl']],['Document-Root',$si['docRoot']],
+             ['PHP-Version',$si['phpVer']],['OS',$si['os']],['max_execution',$si['maxExec'].'s'],['memory_limit',$si['memLimit']],
+             ['open_basedir',$si['openBasedir']],['disable_functions',strlen($si['disabledFn'])>80?substr($si['disabledFn'],0,80).'…':$si['disabledFn']],
+             ['realpath() OK',$si['realpathOk']?'JA':'NEIN ⚠'],['Schreibrecht .',$si['writeable']?'JA':'NEIN'],
+             ['ART-Key',$iv['art_nr']],['Version',$iv['artikel_version']],['Framework',$iv['framework_version']]] as [$k,$v]){
+        $c=(strpos((string)$v,'NEIN')!==false||($k==='open_basedir'&&$v!=='nicht gesetzt'))?' class="warn"':'';
+        echo '<tr><td>'.htmlspecialchars($k).'</td><td'.$c.'>'.htmlspecialchars((string)$v).'</td></tr>';
+    }
+    echo '</table><p style="margin-top:12px"><a href="'.htmlspecialchars($_SERVER['SCRIPT_NAME']).'">← Zurück</a></p>';
+    $jok=file_exists(__DIR__.'/'.$iv['datei_json']);
+    echo '<p style="margin-top:8px;color:'.($jok?'#4f4':'#f44').'">';
+    echo $jok?'✅ ART-JSON gefunden: '.htmlspecialchars($iv['datei_json']):'❌ ART-JSON FEHLT: '.htmlspecialchars($iv['datei_json']);
+    echo '</p><p style="color:#555;margin-top:4px">© 2026 rcpffm · AGPL-3.0 · '.htmlspecialchars($iv['art_nr']).'</p></body></html>';
+    exit;
+}
+
+// ── RAW-Proxy ────────────────────────────────────────────────────
+if(isset($_GET['raw'])){
+    $f=realpath($currentPath.DIRECTORY_SEPARATOR.$_GET['raw']);
+    if($f&&str_starts_with($f,$basePath)&&is_file($f)){
+        $sz=filesize($f);
+        header('Content-Type: text/plain; charset=utf-8');
+        header('X-GRAPPA-Filesize: '.$sz);
+        if($sz>102400)header('X-GRAPPA-Warning: file-large-'.$sz);
+        readfile($f);
+    }else{http_response_code(403);header('Content-Type: text/plain; charset=utf-8');echo 'GRAPPA: Zugriff verweigert';}
+    exit;
+}
+
+// ── Scan ─────────────────────────────────────────────────────────
+$files=[];$scanErr=null;$regexErr=null;
+
+if(!is_dir($currentPath))         $scanErr='Kein Verzeichnis: '.htmlspecialchars($relPath?:'/');
+elseif(!is_readable($currentPath)) $scanErr='Kein Lesezugriff: '.htmlspecialchars($relPath?:'/');
+else{
+    $items=@scandir($currentPath);
+    if($items===false) $scanErr='scandir() fehlgeschlagen';
+    else foreach($items as $item){
+        if($item==='.'||$item==='..') continue;
+        $full=$currentPath.DIRECTORY_SEPARATOR.$item;
+        $isDir=is_dir($full);
+
+        // BUG2-FIX: Directories immer anzeigen, unabhängig vom Filter
+        if($isDir){
+            $files[]=['name'=>$item,'isDir'=>true,'time'=>(int)@filemtime($full),'size'=>0,'crc'=>''];
+            continue;
+        }
+
+        // Datei: Filter anwenden
+        if($pattern==='.*'||$pattern===''){$match=1;}
+        elseif($useRegex){
+            $match=@preg_match('#'.$pattern.'#i',$item);
+            if($match===false&&$regexErr===null){
+                $ec=preg_last_error();
+                $en=[PREG_INTERNAL_ERROR=>'INTERNAL',PREG_BACKTRACK_LIMIT_ERROR=>'BACKTRACK_LIMIT',
+                     PREG_RECURSION_LIMIT_ERROR=>'RECURSION_LIMIT',PREG_BAD_UTF8_ERROR=>'BAD_UTF8',PREG_JIT_STACKLIMIT_ERROR=>'JIT_STACKLIMIT'];
+                $regexErr='Regex-Fehler: '.($en[$ec]??'Code '.$ec).' · Pattern: '.htmlspecialchars($pattern);
+                $match=0;
+            }
+        }else{$match=stripos($item,$pattern)!==false?1:0;}
+
+        if($match){
+            $sz=(int)@filesize($full);
+            $files[]=['name'=>$item,'isDir'=>false,'time'=>(int)@filemtime($full),'size'=>$sz,'crc'=>''];
+        }
+    }
+
+    // ── Sortierung ───────────────────────────────────────────────
+    // Dirs immer zuerst, dann nach gewählter Spalte
+    usort($files,function($a,$b)use($sortCol,$sortDir,$sortCol2,$sortDir2){
+        // Dirs zuerst
+        if($a['isDir']!==$b['isDir']) return $b['isDir']-$a['isDir'];
+        // Beide Dirs oder beide Files: nach Spalte sortieren
+        $cmp=function($x,$y,$col){
+            return match($col){
+                'size' =>$x['size']<=>$y['size'],
+                'time' =>$x['time']<=>$y['time'],
+                default=>strcasecmp($x['name'],$y['name']),
+            };
+        };
+        $r=$cmp($a,$b,$sortCol);
+        if($r===0&&$sortCol2) $r=$cmp($a,$b,$sortCol2)*($sortDir2==='desc'?-1:1);
+        return $sortDir==='desc'?-$r:$r;
+    });
+
+    // ── Duplikat-Erkennung nach Größe (Bytes exakt) ──────────────
+    // Dateien mit gleicher Größe → gelb; nach CRC-Check → hellgrün
+    $sizeMap=[];
+    foreach($files as $i=>$f){
+        if(!$f['isDir']&&$f['size']>0) $sizeMap[$f['size']][]=$i;
+    }
+    $dupSizes=[];$crcGroups=[];
+    foreach($sizeMap as $sz=>$idxs){
+        if(count($idxs)<2) continue;
+        $dupSizes[$sz]=true;
+        // CRC-Check: crc32b über Dateiinhalt
+        $crcs=[];
+        foreach($idxs as $i){
+            $fp=$currentPath.DIRECTORY_SEPARATOR.$files[$i]['name'];
+            if(is_readable($fp)&&$sz<5242880){ // max 5MB für CRC
+                $crcs[$i]=hash_file('crc32b',$fp);
+                $files[$i]['crc']=$crcs[$i];
+            }
+        }
+        // Gleiche CRC → hellgrün-Gruppe
+        $crcBuckets=[];
+        foreach($crcs as $i=>$c) $crcBuckets[$c][]=$i;
+        foreach($crcBuckets as $c=>$cidxs)
+            if(count($cidxs)>1) foreach($cidxs as $i) $crcGroups[$i]=$c;
+    }
+}
+
+$iv=importantValues();$si=getServerInfo();$version=$iv['artikel_version'];
+$templates=GrappaFilter::getTemplates();
+$mode=$useRegex?'regex':'text';
+define('SHARE_WARN',51200);
+
+// Query-String Helfer für Sortier-Links
+function sortUrl(string $col):string{
+    global $relPath,$pattern,$mode,$sortCol,$sortDir,$sortCol2,$sortDir2;
+    $newDir=($sortCol===$col&&$sortDir==='asc')?'desc':'asc';
+    // Shift-Klick via JS → sortCol2; hier PHP-Link für Primärsortierung
+    return '?path='.urlencode($relPath).'&pattern='.urlencode($pattern)
+          .'&mode='.urlencode($mode).'&sort='.urlencode($col).'&dir='.urlencode($newDir)
+          .($sortCol2?'&sort2='.urlencode($sortCol2).'&dir2='.urlencode($sortDir2):'');
+}
+function sortArrow(string $col):string{
+    global $sortCol,$sortDir,$sortCol2,$sortDir2;
+    // Primär: Doppelpfeil fett · Sekundär: Einzelpfeil grau · Inaktiv: ⇅
+    if($sortCol===$col){
+        $arr=$sortDir==='asc'?'▲▲':'▼▼';
+        return '<strong style="color:#e8320a;letter-spacing:-3px">'.$arr.'</strong>';
+    }
+    if($sortCol2===$col){
+        $arr=$sortDir2==='asc'?'▲':'▼';
+        return '<span style="color:#aaa">'.$arr.'</span>';
+    }
+    return '<span style="color:#ddd">⇅</span>';
+}
+
+validateImportantValues();
+?><!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+  <title>lsfilter <?= htmlspecialchars($version) ?></title>
+  <meta name="description" content="<?= htmlspecialchars($iv['beschreibung']) ?>">
+  <link rel="license" href="<?= htmlspecialchars($iv['lizenz_url']) ?>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📁</text></svg>">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    /* RWD: fluid · kein fixed width */
+    html,body{width:100%;overflow-x:hidden}
+    body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:8px;font-size:14px;background:#fff;color:#333;max-width:100vw}
+
+    .gwarn{padding:6px 10px;border-radius:4px;margin:3px 0;font-family:monospace;font-size:11px;word-break:break-all}
+    .gwarn.err{background:#ff4444;color:#fff}.gwarn.warn{background:#ffcc00;color:#000}
+
+    .server-bar{background:#f0f0f0;border:1px solid #ddd;border-radius:4px;padding:4px 8px;margin-bottom:6px;
+      font-size:11px;color:#666;font-family:monospace;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
+    .server-bar a{color:#0066cc}
+    .badge-host{font-weight:bold;color:#333}
+
+    .nav-header{background:#f8f8f8;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:8px}
+    .nav-path{font-size:11px;color:#888;margin-bottom:6px;font-family:monospace;word-break:break-all}
+    .nav-path a{color:#0066cc}
+
+    .search-row{display:flex;gap:6px;margin-bottom:6px}
+    .search-row input[type=text]{flex:1;min-width:0;padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px}
+    .search-row button[type=submit]{padding:8px 14px;background:#444;color:#fff;border:none;border-radius:4px;cursor:pointer;white-space:nowrap}
+
+    .mode-row{display:flex;gap:6px;margin-bottom:6px;align-items:center;font-size:12px;flex-wrap:wrap}
+    .mode-btn{padding:4px 12px;border:1px solid #ccc;border-radius:12px;cursor:pointer;background:#fff;font-size:12px}
+    .mode-btn.active{background:#444;color:#fff;border-color:#444}
+
+    .tpl-section{margin-bottom:4px}
+    .tpl-label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .tpl-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px}
+    .tpl-btn{font-size:11px;padding:4px 9px;border-radius:12px;cursor:pointer;white-space:nowrap;border:1px solid #99b;background:#eef;
+      /* BUG1-FIX: größeres Touch-Target + kein focus-Verlust */
+      -webkit-tap-highlight-color:rgba(0,0,0,.15);touch-action:manipulation}
+    .tpl-btn.grappa{background:#fff0f0;border-color:#d32f2f;color:#d32f2f;font-weight:bold}
+    .tpl-btn.bsp{background:#f0fff0;border-color:#4a4;color:#2a6}
+    .tpl-btn.alle{background:#f5f5f5;border-color:#aaa;color:#666}
+    .tpl-btn:active{opacity:.7}
+
+    .grappa-badge{display:inline-block;background:#e8320a;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-family:monospace;vertical-align:middle}
+
+    /* ── Tabelle RWD ── */
+    table{width:100%;border-collapse:collapse;table-layout:fixed}
+    /* Spaltenbreiten: Name fluid · Größe + Datum fix rechts */
+    col.c-name{width:auto}
+    col.c-size{width:4.5em}
+    col.c-time{width:6em}
+
+    /* Sortierkopf */
+    thead th{
+      padding:8px 6px;border-bottom:2px solid #ddd;
+      font-size:12px;color:#666;text-align:left;
+      cursor:pointer;user-select:none;white-space:nowrap;
+      background:#fafafa;
+    }
+    thead th.th-right{text-align:right}
+    thead th:hover{background:#f0f0f0}
+    thead th.sorted{color:#e8320a;font-weight:bold}
+    thead th.sorted2{color:#888;font-style:italic}
+    /* Sortier-Status-Leiste */
+    .sort-status{font-size:11px;color:#aaa;margin-bottom:4px;font-family:monospace;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .sort-status .s-chip{background:#f5f5f5;border:1px solid #ddd;border-radius:8px;padding:2px 7px;font-size:11px}
+    .sort-status .s-chip.pri{background:#fff0f0;border-color:#e8320a;color:#e8320a}
+    .sort-status .s-chip.sec{background:#f5f5f5;border-color:#aaa;color:#666}
+    .sort-reset{color:#aaa;font-size:11px;cursor:pointer;text-decoration:underline;border:none;background:none;padding:0}
+    /* Quick-Pattern-Leiste */
+    .quick-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+    .quick-btn{font-size:11px;padding:3px 9px;background:#e8f4fd;border:1px solid #9ec;border-radius:12px;cursor:pointer;font-family:monospace;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    /* Hinweis-Box */
+    .hint-box{background:#fffde7;border:1px solid #ffe082;border-radius:6px;padding:10px;margin-bottom:6px;font-size:12px;line-height:1.6;display:none}
+    .hint-box.open{display:block}
+    .hint-toggle{font-size:11px;color:#0066cc;cursor:pointer;border:none;background:none;padding:0;margin-bottom:4px;text-decoration:underline}
+    /* Long-Press-Feedback */
+    .long-press-active{background:#fff3e0!important}
+
+    /* Datei-Zeilen */
+    tbody tr{cursor:pointer}
+    tbody tr:active td{background:#f0f7ff!important}
+
+    td.c-name{
+      padding:11px 6px;
+      border-bottom:1px solid #eee;
+      /* RWD: Name umbricht, nie abgeschnitten */
+      word-break:break-all;
+      overflow-wrap:anywhere;
+      white-space:normal;
+      line-height:1.4;
+    }
+    td.c-size,td.c-time{
+      padding:11px 4px 11px 0;
+      border-bottom:1px solid #eee;
+      text-align:right;
+      font-size:11px;
+      color:#aaa;
+      vertical-align:top;
+      white-space:nowrap;
+    }
+    /* Datum+Uhrzeit: zwei Zeilen */
+    .t-date{display:block}
+    .t-time{display:block;color:#ccc;font-size:10px}
+
+    /* Datei-Typ-Farben */
+    .f-dir {font-weight:bold;color:#d32f2f}
+    .f-art {color:#2e7d32;font-weight:bold}
+    .f-erl {color:#aaa;text-decoration:line-through}
+    .f-file{color:#0066cc}
+    .f-big {color:#e65100}
+
+    /* Duplikat-Hervorhebung */
+    tr.dup-size td   {background:#fffde7}          /* gelb: gleiche Größe */
+    tr.dup-crc  td   {background:#e8f5e9!important}/* hellgrün: CRC identisch */
+
+    /* Modal */
+    #overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:1500}
+    .modal{display:none;position:fixed;top:10px;left:8px;right:8px;background:#fff;border:1px solid #ccc;border-radius:12px;
+      padding:15px;z-index:2000;box-shadow:0 10px 40px rgba(0,0,0,.3);max-height:88vh;overflow-y:auto}
+    .modal h3{margin:0 0 8px;font-size:15px;border-bottom:1px solid #eee;padding-bottom:8px;word-break:break-all;line-height:1.4}
+    .file-meta{font-size:11px;color:#aaa;margin-bottom:10px;font-family:monospace}
+    .btn-a{display:block;width:100%;padding:13px;margin:5px 0;background:#fff;border:1px solid #ddd;border-radius:10px;text-align:left;font-size:14px;cursor:pointer;touch-action:manipulation}
+    .btn-a:active{background:#f0f7ff}
+    .btn-red{color:#d32f2f;border-color:#ffcdd2;background:#fff8f8;font-weight:bold}
+    .btn-cancel{text-align:center;color:#999;border:none;background:transparent;width:100%;padding:10px;cursor:pointer;margin-top:4px;font-size:14px}
+
+    footer{margin-top:16px;border-top:1px solid #eee;padding-top:8px;font-size:11px;color:#aaa}
+    footer a{color:#bbb}
+  </style>
+</head>
+<body>
+
+<div id="overlay" data-close="1"></div>
+
+<div id="actionMenu" class="modal">
+  <h3 id="mTitle">Datei</h3>
+  <div class="file-meta" id="mMeta"></div>
+  <button class="btn-a" onclick="doAct('open')">🌐 1. Direkt aufrufen</button>
+  <button class="btn-a btn-red" id="btnShare" onclick="doAct('shareText')">📤 2. Textinhalt teilen</button>
+  <button class="btn-a" onclick="doAct('shareLink')">🔗 3. Link teilen</button>
+  <button class="btn-a" onclick="doAct('raw')">📄 4. Als .txt öffnen</button>
+  <button class="btn-a" onclick="doAct('copy')">📋 5. Link kopieren</button>
+  <button class="btn-a" id="btnSearch" onclick="doAct('search')">🔍 6. Im Dateiinhalt suchen</button>
+  <div id="searchBox" style="display:none;margin:6px 0">
+    <input type="text" id="searchTerm" placeholder="Suchbegriff (Groß/Klein egal)…"
+           style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:4px">
+    <div id="searchResult" style="font-size:12px;color:#555;font-family:monospace;max-height:120px;overflow-y:auto"></div>
+  </div>
+  <button class="btn-cancel" data-close="1">Abbrechen</button>
+</div>
+
+<!-- Server-Bar -->
+<div class="server-bar">
+  <span>
+    <span class="badge-host"><?= htmlspecialchars($si['proto'].'://'.$si['host']) ?></span>
+    · /<?= htmlspecialchars($relPath) ?>
+    <?php if($si['openBasedir']!=='nicht gesetzt'):?> · <span style="color:#e65100" title="open_basedir">🔒</span><?php endif?>
+    <?php if(!$si['realpathOk']):?> · <span style="color:#d32f2f">⚠realpath</span><?php endif?>
+  </span>
+  <a href="?action=serverinfo">🔍 Info</a>
+</div>
+
+<?php if($_bpw):?><div class="gwarn warn">⚠ <?=htmlspecialchars($_bpw)?></div><?php endif?>
+<?php if($scanErr):?><div class="gwarn err">❌ <?=$scanErr?></div><?php endif?>
+<?php if($regexErr):?><div class="gwarn warn">⚠ <?=htmlspecialchars($regexErr)?></div><?php endif?>
+
+<!-- Nav -->
+<div class="nav-header">
+  <div class="nav-path">
+    <span class="grappa-badge">GRAPPA</span>
+    <?=htmlspecialchars($iv['art_nr'])?> · <?=htmlspecialchars($version)?> · 📁
+    <?php
+    if($relPath){
+        echo '<a href="?mode='.htmlspecialchars($mode).'">Root</a>';
+        $parts=explode('/',$relPath);$built='';
+        foreach($parts as $i=>$p){
+            $built.=($built?'/':'').$p;
+            echo $i<count($parts)-1
+                ?' / <a href="?path='.urlencode($built).'&mode='.htmlspecialchars($mode).'">'.htmlspecialchars($p).'</a>'
+                :' / '.htmlspecialchars($p);
+        }
+    }else echo 'Root';
+    ?>
+    · <span style="color:#aaa"><?=count($files)?> Einträge</span>
+  </div>
+
+  <form method="GET" id="ff">
+    <input type="hidden" name="path"  value="<?=htmlspecialchars($relPath)?>">
+    <input type="hidden" name="mode"  id="modeIn" value="<?=htmlspecialchars($mode)?>">
+    <input type="hidden" name="sort"  value="<?=htmlspecialchars($sortCol)?>">
+    <input type="hidden" name="dir"   value="<?=htmlspecialchars($sortDir)?>">
+    <input type="hidden" name="sort2" value="<?=htmlspecialchars($sortCol2)?>">
+    <input type="hidden" name="dir2"  value="<?=htmlspecialchars($sortDir2)?>">
+
+    <div class="mode-row">
+      <span style="color:#888;font-size:12px">Filter:</span>
+      <button type="button" class="mode-btn <?=$useRegex?'active':''?>" data-mode-set="regex">Regex</button>
+      <button type="button" class="mode-btn <?=!$useRegex?'active':''?>" data-mode-set="text">Text</button>
+      <?php if(!$useRegex):?><span style="color:#aaa;font-size:11px">Groß/Klein egal</span><?php endif?>
+    </div>
+
+    <!-- Sortier-Status -->
+    <?php if($sortCol!=='name'||$sortDir!=='asc'||$sortCol2): ?>
+    <div class="sort-status">
+      <span>Sortierung:</span>
+      <span class="s-chip pri"><?=htmlspecialchars(ucfirst($sortCol))?> <?=$sortDir==='asc'?'▲':'▼'?></span>
+      <?php if($sortCol2): ?>
+      <span class="s-chip sec"><?=htmlspecialchars(ucfirst($sortCol2))?> <?=$sortDir2==='asc'?'▲':'▼'?> (2)</span>
+      <?php endif?>
+      <button class="sort-reset" data-sort-reset="1">✕ zurücksetzen</button>
+    </div>
+    <?php endif?>
+
+    <div class="search-row">
+      <input type="text" name="pattern" id="pIn"
+             value="<?=htmlspecialchars($pattern)?>"
+             placeholder="<?=$useRegex?'Regex z.B. \.php$':'Text z.B. grappa'?>">
+      <button type="submit">Go</button>
+    </div>
+
+    <!-- URL-Schnellzugriff ?q1/?q2/?q3 -->
+    <?php if($quickPatterns): ?>
+    <div class="quick-row">
+      <span style="font-size:11px;color:#aaa">Schnell:</span>
+      <?php foreach($quickPatterns as $qi=>$qp): ?>
+      <button type="button" class="quick-btn"
+              data-regex="<?=htmlspecialchars($qp)?>"
+              data-mode="regex"
+              title="q<?=$qi?>: <?=htmlspecialchars($qp)?>">
+        q<?=$qi?>: <?=htmlspecialchars(strlen($qp)>25?substr($qp,0,24).'…':$qp)?>
+      </button>
+      <?php endforeach?>
+    </div>
+    <?php endif?>
+
+    <!-- Regex-Hinweis-Box -->
+    <button class="hint-toggle" id="hintToggle" type="button">ⓘ Regex-Kurzreferenz</button>
+    <div class="hint-box" id="hintBox">
+      <strong>Regex-Grundregeln:</strong><br>
+      <code>.</code> = beliebiges Zeichen &nbsp;·&nbsp; <code>\.</code> = echter Punkt<br>
+      <code>^</code> = Anfang &nbsp;·&nbsp; <code>$</code> = Ende &nbsp;·&nbsp; <code>\b</code> = Wortgrenze<br>
+      <code>*</code> = 0..∞ &nbsp;·&nbsp; <code>+</code> = 1..∞ &nbsp;·&nbsp; <code>?</code> = 0..1 &nbsp;·&nbsp; <code>{4}</code> = genau 4<br>
+      <code>[abc]</code> = Zeichenklasse &nbsp;·&nbsp; <code>[A-Z]</code> = A bis Z &nbsp;·&nbsp; <code>[^x]</code> = nicht x<br>
+      <code>(?i)</code> = Groß/Klein egal &nbsp;·&nbsp; <code>\d</code> = Ziffer &nbsp;·&nbsp; <code>\w</code> = Wortzeichen<br>
+      <em style="color:#888">⚠ Umlaute (Ä,Ö,Ü,ä,ö,ü,ß): nicht in [A-Z]/[a-z] — extra angeben: [A-ZÄÖÜa-zäöüß]</em><br>
+      <em style="color:#888">URL-Schnellzugriff: ?q1=Muster1&amp;q2=Muster2&amp;q3=Muster3 — als Favorit speicherbar</em>
+    </div>
+
+    <?php
+    $groups=['typ'=>'Dateityp','grappa'=>'GRAPPA','bsp'=>'Regex-Beispiele','alle'=>'Alle'];
+    foreach($groups as $gk=>$gl):
+        $gt=array_filter($templates,fn($t)=>$t['g']===$gk);
+        if(!$gt) continue;
+    ?>
+    <div class="tpl-section">
+      <div class="tpl-label"><?=$gl?></div>
+      <div class="tpl-row">
+        <?php foreach($gt as $t):?>
+        <!-- TOUCH-FIX v04.19: data-Attribute + zentraler Dispatcher -->
+        <button type="button" class="tpl-btn <?=$t['g']?>"
+                title="<?=htmlspecialchars($t['d'])?>"
+                data-regex="<?=htmlspecialchars($t['r'])?>"
+                data-mode="<?=in_array($t['g'],['bsp','grappa'])?'regex':'text'?>">
+          <?=htmlspecialchars($t['t'])?>
+        </button>
+        <?php endforeach?>
+      </div>
+    </div>
+    <?php endforeach?>
+  </form>
+</div>
+
+<!-- Dateiliste -->
+<?php if(!$scanErr):?>
+<table>
+  <colgroup>
+    <col class="c-name"><col class="c-size"><col class="c-time">
+  </colgroup>
+  <thead>
+    <tr>
+      <!-- Sortier-Header · Klick = primär · Shift+Klick = sekundär (via JS) -->
+      <!-- TOUCH-FIX v04.19: data-sort + Long-Press für zweite Spalte -->
+      <th class="<?=$sortCol==='name'?'sorted':'';?> <?=$sortCol2==='name'?'sorted2':'';?>"
+          data-sort="name"
+          title="Tippen: sortieren · Lang-drücken (0.5s): zweite Sortierspalte">
+        Name <?=sortArrow('name')?>
+      </th>
+      <th class="th-right <?=$sortCol==='size'?'sorted':'';?> <?=$sortCol2==='size'?'sorted2':'';?>"
+          data-sort="size"
+          title="Tippen: sortieren · Lang-drücken (0.5s): zweite Sortierspalte">
+        <?=sortArrow('size')?> Gr.
+      </th>
+      <th class="th-right <?=$sortCol==='time'?'sorted':'';?> <?=$sortCol2==='time'?'sorted2':'';?>"
+          data-sort="time"
+          title="Tippen: sortieren · Lang-drücken (0.5s): zweite Sortierspalte">
+        <?=sortArrow('time')?> Datum
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php foreach($files as $i=>$f):
+    // Typ & Icon
+    if($f['isDir'])                            {$cls='f-dir'; $icon='📁';}
+    elseif(preg_match(ERL_RE,$f['name']))      {$cls='f-erl'; $icon='🗄';}
+    elseif(preg_match(ART_JSON_RE,$f['name'])) {$cls='f-art'; $icon='🔑';}
+    elseif(preg_match('/\.json$/',$f['name'])) {$cls='f-file';$icon='📋';}
+    elseif(preg_match('/\.md$/',$f['name']))   {$cls='f-file';$icon='📝';}
+    elseif(preg_match('/\.php$/',$f['name']))  {$cls='f-file';$icon='⚙';}
+    else                                       {$cls='f-file';$icon='📄';}
+
+    $s=$f['size'];
+    $sz=$f['isDir']?'':($s<1024?$s.'B':($s<1048576?round($s/1024,1).'K':round($s/1048576,1).'M'));
+    $dt=date('d.m.y',$f['time']);
+    $tm=date('H:i',$f['time']);
+
+    // Duplikat-Klassen
+    $trCls='';
+    if(!$f['isDir']){
+        if(isset($crcGroups[$i]))       $trCls='dup-crc';   // hellgrün: CRC gleich
+        elseif(isset($dupSizes[$s]))    $trCls='dup-size';   // gelb: gleiche Größe
+    }
+  ?>
+  <!-- TOUCH-FIX v04.19: data-Attribute statt onclick -->
+  <tr class="<?=$trCls?>"
+      data-name="<?=htmlspecialchars($f['name'],ENT_QUOTES)?>"
+      data-isdir="<?=$f['isDir']?'1':'0'?>"
+      data-size="<?=(int)$f['size']?>">
+    <td class="c-name <?=$cls?>"><?=$icon?> <?=htmlspecialchars($f['name'])?></td>
+    <td class="c-size <?=$s>=SHARE_WARN&&!$f['isDir']?'f-big':''?>"><?=$sz?></td>
+    <td class="c-time"><span class="t-date"><?=$dt?></span><span class="t-time"><?=$f['isDir']?'':$tm?></span></td>
+  </tr>
+  <?php endforeach?>
+  <?php if(empty($files)):?>
+  <tr><td colspan="3" style="color:#aaa;text-align:center;padding:20px">Keine Einträge.</td></tr>
+  <?php endif?>
+  </tbody>
+</table>
+<?php endif?>
+
+<footer>
+  © 2026 rcpffm ·
+  <a href="<?=htmlspecialchars($iv['lizenz_url'])?>" rel="license">AGPL-3.0</a> ·
+  <a href="<?=htmlspecialchars($iv['quellcode'])?>">Quellcode</a> ·
+  <?=htmlspecialchars($iv['art_nr'])?> · <?=htmlspecialchars($version)?>
+</footer>
+
+<script>
+const SHARE_WARN=<?=SHARE_WARN?>;
+let selFile='',selSize=0;
+const basePath=<?=json_encode($relPath?$relPath.'/':'')?>;
+const scriptPath=<?=json_encode($_SERVER['SCRIPT_NAME']??'/lsfilter.php')?>;
+const dirBase=scriptPath.replace(/\/[^/]+$/,'/');
+const curMode=<?=json_encode($mode)?>;
+
+// ── TOUCH-DISPATCHER · zentrales Touch-Handling ──────────────────
+// Löst das Mobile-Problem: Browser absorbiert Touch-Events für Scroll.
+// Lösung: touchstart merken · bei touchend wenn kein Scroll → Aktion.
+// Gilt für: Datei-Zeilen, Template-Buttons, Sort-Header, Modus-Buttons.
+
+let _touchStartY=0, _touchStartX=0, _longPressTimer=null, _longPressTarget=null;
+const LONG_PRESS_MS=500, SCROLL_THRESHOLD=8;
+
+function _isMoved(e){
+    const t=e.changedTouches[0];
+    return Math.abs(t.clientY-_touchStartY)>SCROLL_THRESHOLD
+        || Math.abs(t.clientX-_touchStartX)>SCROLL_THRESHOLD;
+}
+
+document.addEventListener('touchstart', e=>{
+    const t=e.touches[0];
+    _touchStartY=t.clientY; _touchStartX=t.clientX;
+    const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
+    if(!el) return;
+    // Long-Press nur für Sort-Header
+    if(el.dataset.sort){
+        _longPressTarget=el;
+        _longPressTimer=setTimeout(()=>{
+            if(_longPressTarget){
+                el.classList.add('long-press-active');
+                navigator.vibrate&&navigator.vibrate(40);
+                doSort(el.dataset.sort, true); // true = sekundär
+                _longPressTarget=null;
+            }
+        }, LONG_PRESS_MS);
+    }
+}, {passive:true});
+
+document.addEventListener('touchend', e=>{
+    clearTimeout(_longPressTimer);
+    const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
+    if(!el) return;
+    if(_isMoved(e)) { _longPressTarget=null; return; } // Scroll → ignorieren
+    if(_longPressTarget===null&&el.dataset.sort) return; // Long-Press war aktiv
+    e.preventDefault();
+    _longPressTarget=null;
+    el.classList.remove('long-press-active');
+    _dispatch(el);
+}, {passive:false});
+
+// Fallback für Desktop (click)
+document.addEventListener('click', e=>{
+    const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
+    if(!el) return;
+    if(el.dataset.sort) doSort(el.dataset.sort, false);
+    else _dispatch(el);
+});
+
+function _dispatch(el){
+    if(el.dataset.close!==undefined){ closeAll(); return; }
+    if(el.dataset.sortReset!==undefined){
+        const f=document.getElementById('ff');
+        f.querySelector('[name=sort]').value='name';
+        f.querySelector('[name=dir]').value='asc';
+        f.querySelector('[name=sort2]').value='';
+        f.querySelector('[name=dir2]').value='asc';
+        f.submit(); return;
+    }
+    if(el.id==='hintToggle'){
+        const hb=document.getElementById('hintBox');
+        hb.classList.toggle('open'); return;
+    }
+    if(el.dataset.modeSet){ setMode(el.dataset.modeSet); return; }
+    if(el.dataset.regex!==undefined){ applyTpl(el.dataset.regex, el.dataset.mode||'regex'); return; }
+    if(el.dataset.name!==undefined){ openMenu(el.dataset.name, el.dataset.isdir==='1', parseInt(el.dataset.size||0)); return; }
+    if(el.dataset.sort){ doSort(el.dataset.sort, false); return; }
+}
+
+// ── Modal ──
+function showM(id){document.getElementById(id).style.display='block';document.getElementById('overlay').style.display='block';}
+function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none');document.getElementById('overlay').style.display='none';}
+
+// ── Datei-Menü ──
+function openMenu(name,isDir,size){
+    if(isDir){window.location.href='?path='+encodeURIComponent(basePath+name)+'&mode='+encodeURIComponent(curMode);return;}
+    selFile=name;selSize=size;
+    document.getElementById('mTitle').innerText=name;
+    let meta='';
+    if(size>0){meta=size+' B ('+(size/1024).toFixed(1)+' KB)';if(size>=SHARE_WARN)meta+=' · ⚠ Groß';}
+    document.getElementById('mMeta').innerText=meta;
+    document.getElementById('btnShare').innerHTML=size>=SHARE_WARN
+        ?'📤 2. Textinhalt teilen ⚠ '+(size/1024).toFixed(0)+'KB'
+        :'📤 2. Textinhalt teilen';
+    showM('actionMenu');
+}
+
+// ── Template anwenden ──
+function applyTpl(regex,forceMode){
+    document.getElementById('pIn').value=regex;
+    if(forceMode) document.getElementById('modeIn').value=forceMode;
+    document.getElementById('ff').submit();
+}
+
+// ── Modus-Umschalter ──
+function setMode(m){
+    document.getElementById('modeIn').value=m;
+    document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.modeSet===m));
+    document.getElementById('ff').submit();
+}
+
+// ── Sortierung · sekundaer=true → Long-Press / false → Tap ──
+function doSort(col,sekundaer){
+    const f=document.getElementById('ff');
+    const s1=f.querySelector('[name=sort]');
+    const d1=f.querySelector('[name=dir]');
+    const s2=f.querySelector('[name=sort2]');
+    const d2=f.querySelector('[name=dir2]');
+    if(sekundaer){
+        // Long-Press: zweite Sortierspalte setzen oder zurücksetzen
+        if(s2.value===col){ s2.value='';d2.value='asc'; } // nochmal = Reset
+        else { s2.value=col; d2.value='asc'; }
+    }else{
+        // Tap: primäre Sortierung
+        const nd=(s1.value===col&&d1.value==='asc')?'desc':'asc';
+        s1.value=col;d1.value=nd;
+        // Primäre = sekundäre? → sekundäre löschen
+        if(s2.value===col){s2.value='';d2.value='asc';}
+    }
+    f.submit();
+}
+
+// ── Aktionen ──
+async function doAct(type){
+    const fileUrl=window.location.origin+dirBase+basePath+selFile;
+    const rawUrl=scriptPath+'?path='+encodeURIComponent(<?=json_encode($relPath)?>)+'&raw='+encodeURIComponent(selFile);
+    switch(type){
+        case 'open': window.location.href=basePath+selFile; break;
+        case 'search':
+            const sb=document.getElementById('searchBox');
+            const vis=sb.style.display==='none';
+            sb.style.display=vis?'block':'none';
+            if(vis) setTimeout(()=>document.getElementById('searchTerm').focus(),100);
+            break;
+        case 'shareLink':
+            if(navigator.share) navigator.share({title:selFile,url:fileUrl}).catch(e=>{if(e.name!=='AbortError')showErr('Share: '+e.message);});
+            else showErr('navigator.share nicht verfügbar');
+            break;
+        case 'raw': window.location.href=rawUrl; break;
+        case 'copy':
+            if(navigator.clipboard) navigator.clipboard.writeText(fileUrl).then(()=>{alert('Link kopiert!');closeAll();}).catch(e=>showErr('Clipboard: '+e.message));
+            else showErr('Clipboard-API nicht verfügbar');
+            break;
+        case 'shareText':
+            try{
+                const r=await fetch(rawUrl,{credentials:'same-origin'});
+                if(!r.ok){let m='HTTP '+r.status;if(r.status===403)m+=' · Security-Block?';if(r.status===500)m+=' · open_basedir?';showErr(m);break;}
+                const text=await r.text();
+                if(!navigator.share){showErr('navigator.share nicht verfügbar');break;}
+                try{await navigator.share({title:selFile,text:text});}
+                catch(se){if(se.name!=='AbortError')showErr('Share: '+se.name+' · '+se.message);}
+            }catch(fe){showErr('Fetch: '+fe.message+(fe.message.includes('Failed')?'· CORS/Security-Block?':''));}
+            closeAll(); break;
+    }
+}
+
+function showErr(m){alert('⚠ '+m);console.error('GRAPPA lsfilter:',m);}
+
+// Volltext-Suche im Dateiinhalt
+document.addEventListener('DOMContentLoaded',()=>{
+    const st=document.getElementById('searchTerm');
+    if(!st) return;
+    st.addEventListener('keydown', async e=>{
+        if(e.key!=='Enter') return;
+        e.preventDefault();
+        const term=st.value.trim();
+        if(!term) return;
+        const res=document.getElementById('searchResult');
+        res.textContent='Suche…';
+        const rawUrl=scriptPath+'?path='+encodeURIComponent(<?=json_encode($relPath)?>)+'&raw='+encodeURIComponent(selFile);
+        try{
+            const r=await fetch(rawUrl,{credentials:'same-origin'});
+            if(!r.ok){res.textContent='Fehler HTTP '+r.status;return;}
+            const text=await r.text();
+            const lower=text.toLowerCase();
+            const tl=term.toLowerCase();
+            let count=0,pos=0;const positions=[];
+            while((pos=lower.indexOf(tl,pos))!==-1){positions.push(pos);pos+=tl.length;count++;}
+            if(count===0){res.style.color='#d32f2f';res.textContent='❌ "'+term+'" nicht gefunden';}
+            else{
+                res.style.color='#2e7d32';
+                let out='✅ '+count+'× gefunden · Erste Treffer:<br>';
+                positions.slice(0,5).forEach(p=>{
+                    const start=Math.max(0,p-30);
+                    const end=Math.min(text.length,p+term.length+30);
+                    let snippet=text.slice(start,end).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+                    const tStart=p-start;
+                    snippet=snippet.slice(0,tStart)+'<mark>'+snippet.slice(tStart,tStart+term.length)+'</mark>'+snippet.slice(tStart+term.length);
+                    out+='…'+snippet+'…<br>';
+                });
+                res.innerHTML=out;
+            }
+        }catch(e){res.textContent='Fetch-Fehler: '+e.message;}
+    });
+});
+console.log('GRAPPA lsfilter · <?=$iv['art_nr']?> · <?=$version?> · <?=$iv['framework_version']?> · <?=$si['host']?>');
+</script>
+</body>
+</html>
