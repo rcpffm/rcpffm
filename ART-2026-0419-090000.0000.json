@@ -1,0 +1,114 @@
+{
+  "schema": "GRAPPA-Artikel v08.00",
+  "schema_version": "v08.00-3",
+  "art": "ART-2026-0419-090000.0000",
+  "slug": "lsfilter",
+  "datei_php": "lsfilter.php",
+  "datei_json": "ART-2026-0419-090000.0000.json",
+  "tool_typ": "PHP-Tool",
+  "framework_version": "fw v08.00",
+  "artikel_version": "v04.23",
+  "titel": "lsfilter · GRAPPA Filesystem-Browser",
+  "subtitle": "lsfilter",
+  "titel_en": "lsfilter · GRAPPA Filesystem Browser",
+  "subtitle_en": "lsfilter",
+  "beschreibung": "lsfilter: Mobiler Filesystem-Browser der Dateien nicht nur anzeigt — sondern ihren Inhalt direkt teilt. Regex-Filter, ART-Key-Erkennung, Server-Diagnose, Volltext-Suche. Für alle die ihr Dateisystem vom Handy aus im Griff haben wollen. Ohne App. Ohne Cloud. Ohne Erklärungsbedarf. AGPL-3.0 · rcpffm.",
+  "beschreibung_en": "lsfilter: A mobile filesystem browser that does not just show files — it shares their content directly. Regex filter, ART-key detection, server diagnostics, full-text search. For everyone who wants their filesystem under control from a phone. No app. No cloud. No explanation needed. AGPL-3.0 · rcpffm.",
+  "keywords": "GRAPPA FREE FRAMEWORK, lsfilter, PHP Filesystem Browser, mobiler Dateimanager, Regex Dateifilter, Share-Pipe PHP, Dateiinhalt teilen Android, ART-Key Erkennung, Server-Diagnose PHP, Volltext-Suche Dateien, AGPL-3.0, Open Source, degoogle, Mobile-First, kein Tracking, rcpffm, verteiltes CMS",
+  "keywords_en": "GRAPPA FREE FRAMEWORK, lsfilter, PHP filesystem browser, mobile file manager, regex file filter, share pipe PHP, share file content Android, ART-key detection, server diagnostics PHP, full-text file search, AGPL-3.0, open source, degoogle, mobile-first, no tracking, rcpffm, distributed CMS, resilient publishing",
+  "og_titel": "lsfilter · GRAPPA Filesystem-Browser · rcpffm",
+  "og_titel_en": "lsfilter · GRAPPA Filesystem Browser · rcpffm",
+  "og_beschreibung": "Mobiler Filesystem-Browser · Regex-Filter · ART-Key-Validierung · AGPL-3.0",
+  "og_beschreibung_en": "Mobile filesystem browser · regex filter · ART-key validation · AGPL-3.0",
+  "copyright": "Copyright (C) 2026 rcpffm",
+  "lizenz": "AGPL-3.0",
+  "lizenz_url": "https://www.gnu.org/licenses/agpl-3.0.html",
+  "quellcode": "https://github.com/rcpffm/rcpffm",
+  "autor": "rcpffm + Claude Sonnet 4.6 (Anthropic)",
+  "ort": "Rüsselsheim am Main · Keyif-Bar-Sektor",
+  "datum_iso": "2026-04-19T09:00:00Z",
+  "last_modified": "2026-04-20T15:00:00Z",
+  "sprache": "de",
+  "degoogle": true,
+  "ggstc_erstellt": "n/a",
+  "objekte": [],
+  "relatedTo_count": 0,
+  "relatedTo": [],
+  "flags": [
+    "tool",
+    "php",
+    "fw-v08",
+    "filesystem",
+    "mobile",
+    "regex"
+  ],
+  "status": "aktiv",
+  "versionHistory": [
+    {
+      "version": "v04.14",
+      "datum_iso": "2026-04-19T05:15:00Z",
+      "autor": "rcpffm + Gemini",
+      "änderung": "Vorversion · ART-Regex ausgekocht · nicht GRAPPA-konform"
+    },
+    {
+      "version": "v04.15",
+      "datum_iso": "2026-04-19T09:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "GRAPPA-konform: Kirk-Block · art_nr · importantValues() vollständig · validateImportantValues() · copyright/lizenz/quellcode · Deploy-Name lsfilter.php (kein Versionsstring) · Regex-Vorschlagsbox mit 8 Templates · ART-Regex aus v04.14 übernommen (Gemini+rcpffm) · Datei-Icons nach Typ · ERL_-Styling · Dateigröße · Sortierung Dirs>Files>alpha · RAW-Proxy Security-Fix (str_starts_with) · Footer AGPL"
+    },
+    {
+      "version": "v04.16",
+      "datum_iso": "2026-04-19T14:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "Error-Handling vollständig: basePath-Fallback bei realpath()-Fehler · is_readable()-Check vor scandir · preg_last_error() sichtbar mit Fehlercode-Namen · RAW-Proxy: X-GRAPPA-Filesize + X-GRAPPA-Warning Header · HTTP-Fehlerauswertung im JS (403=Security-Block/500=open_basedir) · navigator.share DataError/AbortError getrennt · Größen-Warnung ab 50k im Modal + Button · server-bar mit Host/Proto/basedir-Indikator/realpath-Warnung · ?action=serverinfo Debug-Ausgabe (PHP-Version/OS/open_basedir/disable_functions/realpath/Schreibrecht) · console.log mit host · Dateianzahl in nav-path"
+    },
+    {
+      "version": "v04.18",
+      "datum_iso": "2026-04-20T06:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "BUG1: onpointerup+requestAnimationFrame für Template-Buttons — zuverlässig auf Mobile. BUG2: Dirs immer anzeigen unabhängig vom Filter — isDir→sofort in Liste ohne Muster-Check. BUG3: ERL_RE = /^ERL\\d*_/i — erfasst ERL_, ERL1_, ERL01_, ERL2_ etc. Feature4: Sortier-Kopfzeile mit ▲▼-Pfeilen · Klick=primär · Shift+Klick=zweite Ebene. Feature5: Duplikat-Erkennung — gleiche Größe=gelb · gleiche CRC32b=hellgrün · max 5MB CRC. Feature6: RWD — Dateiname umbricht · Größe+Datum rechts · Uhrzeit darunter · max-scale=5 · table-layout:fixed · word-break:break-all. maximum-scale=5 (pinch-zoom). col-widths: name fluid, size 4.5em, time 6em."
+    },
+    {
+      "version": "v04.19",
+      "datum_iso": "2026-04-20T08:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "TOUCH-DISPATCHER: Zentraler touchstart/touchend-Handler statt onclick auf interaktiven Elementen. Alle klickbaren Elemente tragen data-Attribute (data-sort, data-name, data-isdir, data-size, data-regex, data-mode, data-mode-set, data-close). Scroll-Threshold 8px verhindert Fehlauslösungen. Long-Press (500ms) auf Sort-Header = zweite Sortierspalte setzen (Mobile-Ersatz für Shift+Klick). Vibration-Feedback bei Long-Press (navigator.vibrate). Long-Press nochmal = Reset sekundäre Spalte. Doppelpfeil ▲▲/▼▼ für primäre Sortierung, Einzelpfeil grau für sekundäre. sorted2-CSS-Klasse. Long-Press-Feedback (orange Hintergrund). 5 verbliebene onclick nur in Modal-Aktions-Buttons (doAct-Aufrufe — bleiben onclick da Modal garantiert geöffnet)."
+    },
+    {
+      "version": "v04.20",
+      "datum_iso": "2026-04-20T09:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "JSONTXT-Regex erweitert: _v01_02 (Unterstrich) UND _v01.02 (Punkt) als Versionsstring · Versionsstring jetzt optional (?)· Regex: ^ART-\\d{4}-\\d{4}-\\d{6}\\.\\d{4}(_v\\d+[._]\\d+)?\\.jsontxt$"
+    },
+    {
+      "version": "v04.21",
+      "datum_iso": "2026-04-20T12:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "3 neue Regex-Beispiele: (?i)SmartFilter (GK-egal), Grappa_objekte (GK-sensitiv), \\b[A-Z][a-z]* (Wortanfang) mit Umlaut-Hinweis. Regex-Hinweis-Box (ⓘ) mit Kurzreferenz. URL-Schnellzugriff ?q1/?q2/?q3 als Favoriten-Muster. Sortier-Status-Chip-Leiste mit ✕-Reset. Volltext-Suche im Dateiinhalt (Enter nach Suchbegriff, case-insensitive, Kontext-Snippets mit Markierung). Modal-Button 6."
+    },
+    {
+      "version": "v04.22",
+      "datum_iso": "2026-04-20T14:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "CR-01: Vollständiger Kirk-Copyright-Block · AGPL-3.0 §7(b) · DE+EN · NOT for-Liste · RESILIENCE BY DESIGN · #TAG-Block · ART-Referenz im Header"
+    },
+    {
+      "version": "v04.23",
+      "datum_iso": "2026-04-20T15:00:00Z",
+      "autor": "rcpffm + Claude Sonnet 4.6 · Pfadfinder 6",
+      "änderung": "SEO DE+EN: technisch in keywords · humorvoll in beschreibung+og · USP Share-Pipe+Mobile-First+Regex gleichgewichtig · Ohne App/Cloud/Erklärungsbedarf · AGPL-3.0 als Freiheitsmerkmal"
+    }
+  ],
+  "bemerkungen": [
+    {
+      "utc": "2026-04-19T09:00:00Z",
+      "was": "ART-Regex für ART-Key-Vollvalidierung stammt von rcpffm+Gemini (v04.14) · in v04.15 übernommen und als Template in GrappaFilter::getTemplates() eingebettet · Datumslogik 2026-2399 · Schaltjahre korrekt",
+      "wer": "Claude Sonnet 4.6 · Pfadfinder 6"
+    },
+    {
+      "utc": "2026-04-19T09:00:00Z",
+      "was": "Deploy-Name: lsfilter.php · slug=lsfilter · kein Versionsstring im Dateinamen (§17.3)",
+      "wer": "Claude Sonnet 4.6 · Pfadfinder 6"
+    }
+  ]
+}
