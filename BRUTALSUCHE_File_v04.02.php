@@ -585,6 +585,7 @@ function rotateBackups(string $file, int $limit): void {
     rename($file,$file.'.BAK');
 }
 
+
 function buildGrappaArtifact(): array {
     $iv     = importantValues();
     $artNr  = $iv['art_nr'];
