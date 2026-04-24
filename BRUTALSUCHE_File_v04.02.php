@@ -1,6 +1,6 @@
 <?php
 // ═══════════════════════════════════════════════════════════════
-//      GRAPPA FREE FRAMEWORK · AGPL-3.0 · COPYRIGHT NOTICE
+//      GRAPPA FREE FRAMEWORK · AGPL-3.0 · COPYRIGHT Notice 
 // ═══════════════════════════════════════════════════════════════
 //      Copyright (C) 2026 rcpffm
 //      https://github.com/rcpffm/rcpffm
