@@ -42,7 +42,7 @@
 //  "To boldly go where no framework has gone before."
 //  — USS GRAPPA NCC-rcpffm-claude 🥃
 //
-//  #TAG:GRAPPA-STD #AUTHOR:rcpffm #VER:v04.02
+//  #TAG:GRAPPA-STD #AUTHOR:rcpffm #VER:v04.03
 //  #UTC:2026-04-20T12:00:00Z #GRAPPA:fw v08.00
 //  #LICENSE:AGPL-3.0 #ENCODING:UTF-8-NO-BOM
 //  #ART:ART-2026-0317-172900.0000
@@ -89,7 +89,7 @@ function importantValues(): array {
         // OP-54: 'key' entfernt · 'art' ist alleiniger Schlüssel
 
         // ── VERSIONING ──────────────────────────────────────────
-        'artikel_version'   => 'v04.02',
+        'artikel_version'   => 'v04.03',
         'framework_version' => 'fw v08.00',
         'schema_version'    => 'v08.00-3',
 
@@ -1037,7 +1037,7 @@ $lsfilterUrl  = GrappaUrl::lsfilterUrl($lsfilterBase, $pattern, $grepStr);
   <tbody>
   <?php foreach($sortedFiles as $f):
     $cls=colorClass($f['ext']);
-    $url='./'.($relDisplay==='./''?'':ltrim($relDisplay,'./')).rawurlencode($f['name']);
+    $url='./'.($relDisplay==='./' ? '' : ltrim($relDisplay,'./')).rawurlencode($f['name']);
   ?>
   <tr>
     <td class="<?=$cls?>">
@@ -1354,7 +1354,7 @@ function openFile(url,name){
 }
 
 // ── LocalStorage ─────────────────────────────────────────────────
-var LS_KEY='brutalsuche_v0402';
+var LS_KEY='brutalsuche_v0403';
 function lsGetState(){
     return{pattern:(document.getElementById('patternInput')||{}).value||'',
            grep:(document.getElementById('grepInput')||{}).value||'',
