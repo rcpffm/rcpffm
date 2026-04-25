@@ -1,0 +1,13 @@
+{
+  "locked": true,
+  "locked_by": "Claude Sonnet 4.6 · USS GRAPPA NCC-rcpffm-claude",
+  "locked_for": "Neuer SGE-Spielbericht · ART-2026-0425-133000.0000 · SGE bei FC Augsburg · 25.04.2026",
+  "art_reserviert": "ART-2026-0425-133000.0000",
+  "slug_reserviert": "sge_augsburg_25_04",
+  "lock_utc": "2026-04-25T08:28:00Z",
+  "lock_ggstc": "-296359.0000",
+  "unlock_nach": "Spielbericht deployed + grappa_index.json aktualisiert",
+  "po": "rcpffm",
+  "hinweis": "Lock vor Deploy auf infinity + alwaysdata setzen. Nach Deploy: locked=false + unlock_utc eintragen.",
+  "unlock_utc": null
+}
