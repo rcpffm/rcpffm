@@ -35,14 +35,28 @@
 // ═══════════════════════════════════════════════════════════════
 //
 //  lsfilter.php · GRAPPA FREE FRAMEWORK
-//  #TAG:GRAPPA-STD #AUTHOR:rcpffm #VER:v04.23
-//  #UTC:2026-04-20T14:00:00Z #GRAPPA:fw v08.00
+//  #TAG:GRAPPA-STD #AUTHOR:rcpffm #VER:v05.02
+//  #UTC:2026-05-17T17:00:00Z #GRAPPA:fw v08.00
 //  #LICENSE:AGPL-3.0 #ENCODING:UTF-8-NO-BOM
 //  #ART:ART-2026-0419-090000.0000
 //
+//  NEU v05.02 (Pfadfinder 13 · Claude Sonnet 4.6 · 2026-05-17):
+//    + .nav-current · aktuelles Verzeichnis · grün + fett
+//    + Breadcrumb letztes Segment als nav-current hervorgehoben
+//  NEU v05.01 (Pfadfinder 13 · Claude Sonnet 4.6 · 2026-05-17):
+//    + GrappaPreset  → erweiterbare Preset-Registry · getrennt von GrappaFilter
+//    + GrappaNav     → Navigation · .. eine Ebene höher · root-Schutz · Breadcrumbs
+//    + GrappaOutput  → format=json|csv|txt|html · offen für alles · register()
+//    + GrappaUrl     → Single Source of Truth URL · alle Schalter mitgeführt
+//    Fix the class, not the instance.
+//  NEU v04.24:
+//    + ?preset=art_json|art_all|art_txt|erl|grappa → URL-Kurzform
+//    + ?format=json → JSON-API-Output (Dateiliste als Array)
+//    + Regex-Kommentar im Code
+//    + Access-Control-Allow-Origin: * für Bridge-Fetch
 //  NEU v04.22:
 //    + Vollständiger Kirk-Copyright-Block · CR-01..06 · §7(b) AGPL
-//    + SEO DE+EN vollständig (folgt nach PO-Entscheid)
+//    + SEO DE+EN vollständig
 // ═══════════════════════════════════════════════════════════════
 //      Copyright (C) 2026 rcpffm · https://github.com/rcpffm/rcpffm
 //      DE: AGPL-3.0 · Nutzung/Änderung/Weitergabe nur unter gleichen Bedingungen.
@@ -53,7 +67,7 @@
 function importantValues(): array {
     return [
         'art_nr'            => 'ART-2026-0419-090000.0000',
-        'artikel_version'   => 'v04.23',
+        'artikel_version'   => 'v05.02',
         'framework_version' => 'fw v08.00',
         'schema_version'    => 'v08.00-3',
         'titel'             => 'lsfilter · GRAPPA Filesystem-Browser',
@@ -79,12 +93,13 @@ function importantValues(): array {
         'autor'             => 'rcpffm + Claude Sonnet 4.6 (Anthropic)',
         'ort'               => 'Rüsselsheim am Main · Keyif-Bar-Sektor',
         'datum_iso'         => '2026-04-19T09:00:00Z',
-        'last_modified'     => '2026-04-20T15:00:00Z',
+        'last_modified'     => '2026-05-17T17:00:00Z',
         'sprache'           => 'de',
         'degoogle'          => true,
         'relatedTo_count'   => 0,
         'relatedTo'         => [],
-        'flags'             => ['tool','php','fw-v08','filesystem','mobile','regex','sort','rwd'],
+        'flags'             => ['tool','php','fw-v08','filesystem','mobile','regex','sort','rwd',
+                                'json-api','nav-up','preset-registry','url-state'],
         'status'            => 'aktiv',
         'ggstc_erstellt'    => 'n/a',
     ];
@@ -120,6 +135,9 @@ define('ART_JSON_RE','/^ART-((202[6-9]|20[3-9]\d|2[1-3]\d{2})-((0[13578]|1[02])(
 // BUG3-FIX: ERL-Muster — ERL_, ERL1_, ERL01_, ERL2_ etc.
 define('ERL_RE','/^ERL\d*_/i');
 
+// ════════════════════════════════════════════════════════════════
+// KLASSE: GrappaFilter (unverändert v04.23)
+// ════════════════════════════════════════════════════════════════
 class GrappaFilter {
     public static function getTemplates(): array {
         return [
@@ -129,7 +147,6 @@ class GrappaFilter {
             ['g'=>'typ',  't'=>'Grappa-Objekte',   'r'=>'^Grappa\d{5}\.(jpg|webp|png|mp4)$','d'=>'Format: Grappa00001.jpg'],
             ['g'=>'grappa','t'=>'ART-JSON (exakt)','r'=>'^ART-((202[6-9]|20[3-9]\d|2[1-3]\d{2})-((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(0[469]|11)(0[1-9]|[12]\d|30)|02(0[1-9]|1\d|2[0-8]))|((20(28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)|(21|22|23)(04|08|12|16|20|24|28|32|36|40|44|48|52|56|60|64|68|72|76|80|84|88|92|96)))-0229)-\d{6}\.\d{4}\.json$','d'=>'Deploy-fertige ART-*.json'],
             ['g'=>'grappa','t'=>'ART-JSONTXT',    'r'=>'^ART-\d{4}-\d{4}-\d{6}\.\d{4}(_v\d+[._]\d+)?\.jsontxt$','d'=>'Arbeitsversionen'],
-            // BUG3-FIX: ERL-Muster erweitert
             ['g'=>'grappa','t'=>'ERL (archiviert)','r'=>'^ERL\d*_',               'd'=>'Archiviert: ERL_, ERL1_, ERL01_ etc.'],
             ['g'=>'bsp',  't'=>'^ART- (Anfang)',   'r'=>'^ART-',                  'd'=>'^ = Anfang · nur Dateien die mit ART- beginnen'],
             ['g'=>'bsp',  't'=>'\.php$ (Ende)',    'r'=>'\.php$',                 'd'=>'$ = Ende fest · \\ maskiert den Punkt'],
@@ -141,6 +158,230 @@ class GrappaFilter {
             ['g'=>'bsp',  't'=>'\\b[A-Z][a-z]* (Wort^)', 'r'=>'\\b[A-Z][a-z]*',   'd'=>'\\b=Wortgrenze · [A-Z]=Großbuchst. · [a-z]*=Kleinbuchst. · ⚠ Umlaute extra: [A-ZÄÖÜa-zäöüß]'],
             ['g'=>'alle', 't'=>'Alle Dateien',     'r'=>'.*',                     'd'=>'Kein Filter'],
         ];
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// KLASSE: GrappaPreset (NEU v05.01)
+// Erweiterbare Preset-Registry · getrennt von GrappaFilter
+// GrappaPreset::register('key', '/regex/') — jederzeit erweiterbar
+// ════════════════════════════════════════════════════════════════
+class GrappaPreset {
+    private static array $presets = [];
+    private static bool  $initialized = false;
+
+    private static function init(): void {
+        if (self::$initialized) return;
+        self::$initialized = true;
+        self::$presets = [
+            'art_json'  => ltrim(rtrim(ART_JSON_RE, '/'), '/'),
+            'art_all'   => '^ART-\d{4}-\d{4}-\d{6}\.\d{4}',
+            'art_txt'   => '^ART-\d{4}-\d{4}-\d{6}\.\d{4}.*\.jsontxt$',
+            'erl'       => '^ERL\d*_',
+            'grappa'    => '^Grappa\d{5}\.',
+            'html'      => '\.(html?|php|js|css)$',
+            'json'      => '\.(json|jsontxt)$',
+            'md'        => '\.md$',
+            'all'       => '.*',
+        ];
+    }
+
+    public static function register(string $key, string $regex): void {
+        self::init();
+        self::$presets[$key] = $regex;
+    }
+
+    public static function get(string $key): ?string {
+        self::init();
+        return self::$presets[$key] ?? null;
+    }
+
+    public static function all(): array {
+        self::init();
+        return self::$presets;
+    }
+
+    // Aus ?preset= URL-Parameter auflösen
+    public static function fromRequest(): ?string {
+        self::init();
+        $preset = $_GET['preset'] ?? '';
+        if ($preset !== '' && isset(self::$presets[$preset])) {
+            return self::$presets[$preset];
+        }
+        return null;
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// KLASSE: GrappaNav (NEU v05.01)
+// Navigation · eine Ebene höher · root-Schutz · Breadcrumbs
+// ════════════════════════════════════════════════════════════════
+class GrappaNav {
+    private string $root;
+    private string $relPath;
+
+    public function __construct(string $root, string $relPath) {
+        $this->root    = rtrim($root, DIRECTORY_SEPARATOR);
+        $this->relPath = trim($relPath, '/');
+    }
+
+    public function isRoot(): bool {
+        return $this->relPath === '';
+    }
+
+    public function parentPath(): string {
+        if ($this->isRoot()) return '';
+        $parts = explode('/', $this->relPath);
+        array_pop($parts);
+        return implode('/', $parts);
+    }
+
+    public function parentUrl(array $extraParams = []): string {
+        if ($this->isRoot()) return '';
+        $params = array_merge($extraParams, ['path' => $this->parentPath()]);
+        return '?' . http_build_query(array_filter($params, fn($v) => $v !== null && $v !== ''));
+    }
+
+    public function renderUpLink(string $label = '.. ↑ eine Ebene höher'): string {
+        if ($this->isRoot()) return '';
+        $url = htmlspecialchars($this->parentUrl());
+        return '<a class="nav-up-link" href="' . $url . '">' . htmlspecialchars($label) . '</a> ';
+    }
+
+    public function breadcrumbs(): array {
+        $crumbs = [['label' => '/', 'url' => '?path=', 'isRoot' => true]];
+        if ($this->isRoot()) return $crumbs;
+        $parts = explode('/', $this->relPath);
+        $built = '';
+        foreach ($parts as $part) {
+            $built = $built ? $built . '/' . $part : $part;
+            $crumbs[] = ['label' => $part, 'url' => '?path=' . urlencode($built), 'isRoot' => false];
+        }
+        return $crumbs;
+    }
+
+    public function currentAbsPath(): string {
+        if ($this->isRoot()) return $this->root;
+        return $this->root . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $this->relPath);
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// KLASSE: GrappaUrl (NEU v05.01)
+// Single Source of Truth für URL-Zustand · ALLE Schalter mitgeführt
+// Scriptbar · wiederholbar · reproduzierbar · kein Mausklick nötig
+// ════════════════════════════════════════════════════════════════
+class GrappaUrl {
+    public static function current(): array {
+        return array_filter([
+            'format'  => $_GET['format']  ?? null,
+            'preset'  => $_GET['preset']  ?? null,
+            'pattern' => $_GET['pattern'] ?? null,
+            'mode'    => $_GET['mode']    ?? null,
+            'since'   => $_GET['since']   ?? null,
+            'path'    => $_GET['path']    ?? null,
+            'sort'    => $_GET['sort']    ?? null,
+            'dir'     => $_GET['dir']     ?? null,
+            'sort2'   => $_GET['sort2']   ?? null,
+            'dir2'    => $_GET['dir2']    ?? null,
+            'q1'      => $_GET['q1']      ?? null,
+            'q2'      => $_GET['q2']      ?? null,
+            'q3'      => $_GET['q3']      ?? null,
+        ], fn($v) => $v !== null && $v !== '');
+    }
+
+    public static function build(array $overrides = []): string {
+        $params = array_filter(array_merge(self::current(), $overrides), fn($v) => $v !== null && $v !== '');
+        return $params ? '?' . http_build_query($params) : '';
+    }
+
+    public static function absolute(array $overrides = []): string {
+        $proto  = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host   = $_SERVER['HTTP_HOST']   ?? 'localhost';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '/lsfilter.php';
+        return $proto . '://' . $host . $script . self::build($overrides);
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// KLASSE: GrappaOutput (NEU v05.01)
+// Format-Router · html | json | csv | txt · offen für alles
+// GrappaOutput::register('xml', $fn) — beliebig erweiterbar
+// ════════════════════════════════════════════════════════════════
+class GrappaOutput {
+    private static array $formats = [];
+    private static bool  $initialized = false;
+
+    private static function init(): void {
+        if (self::$initialized) return;
+        self::$initialized = true;
+        self::$formats = [
+            'json' => [self::class, 'renderJson'],
+            'csv'  => [self::class, 'renderCsv'],
+            'txt'  => [self::class, 'renderTxt'],
+            // html → kein Eintrag → normaler HTML-Flow läuft durch
+        ];
+    }
+
+    public static function register(string $format, callable $fn): void {
+        self::init();
+        self::$formats[$format] = $fn;
+    }
+
+    public static function requested(): ?string {
+        $f = strtolower(trim($_GET['format'] ?? ''));
+        return ($f && $f !== 'html') ? $f : null;
+    }
+
+    public static function dispatch(array $files, array $meta): bool {
+        self::init();
+        $format = self::requested();
+        if (!$format) return false;
+        if (isset(self::$formats[$format])) {
+            call_user_func(self::$formats[$format], $files, $meta);
+            exit;
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(400);
+        echo json_encode([
+            'error'             => 'Unbekanntes Format',
+            'format_requested'  => $format,
+            'formats_available' => array_keys(self::$formats),
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    private static function renderJson(array $files, array $meta): void {
+        header('Content-Type: application/json; charset=utf-8');
+        header('Access-Control-Allow-Origin: *');
+        echo json_encode(
+            array_merge($meta, ['files' => $files]),
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
+    }
+
+    private static function renderCsv(array $files, array $meta): void {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="lsfilter_' . date('Ymd_His') . '.csv"');
+        echo "\xEF\xBB\xBF"; // UTF-8 BOM für Excel
+        echo "name\tsize\tmodified\tisDir\n";
+        foreach ($files as $f) {
+            echo implode("\t", [
+                $f['name'],
+                $f['size'] ?? 0,
+                $f['modified'] ?? '',
+                isset($f['isDir']) && $f['isDir'] ? '1' : '0',
+            ]) . "\n";
+        }
+    }
+
+    private static function renderTxt(array $files, array $meta): void {
+        header('Content-Type: text/plain; charset=utf-8');
+        echo '# lsfilter · ' . ($meta['host'] ?? '') . ' · ' . ($meta['generated'] ?? '') . "\n";
+        echo '# preset: ' . ($meta['preset'] ?? '-') . ' · count: ' . ($meta['count'] ?? 0) . "\n\n";
+        foreach ($files as $f) {
+            echo $f['name'] . "\t" . ($f['size'] ?? 0) . "\t" . ($f['modified'] ?? '') . "\n";
+        }
     }
 }
 
@@ -165,11 +406,21 @@ if(!in_array($sortCol,['name','size','time'])) $sortCol='name';
 if(!in_array($sortDir,['asc','desc']))         $sortDir='asc';
 if(!in_array($sortCol2,['name','size','time',''])) $sortCol2='';
 
+// v05.01: GrappaPreset löst ?preset= auf · überschreibt $pattern wenn gesetzt
+$_presetRegex = GrappaPreset::fromRequest();
+if ($_presetRegex !== null) {
+    $pattern  = $_presetRegex;
+    $useRegex = true;
+}
+
 $basePath=$_bpw=null;
 $bp=realpath('.');
 if($bp===false){$basePath=__DIR__;$_bpw='realpath() scheiterte · Fallback: __DIR__';}
 else $basePath=$bp;
-$currentPath=($relPath==='')?$basePath:$basePath.DIRECTORY_SEPARATOR.$relPath;
+
+// v05.01: GrappaNav übernimmt Pfad-Berechnung
+$nav         = new GrappaNav($basePath, $relPath);
+$currentPath = $nav->currentAbsPath();
 
 // ── ?action=serverinfo ───────────────────────────────────────────
 if(($_GET['action']??'')==='serverinfo'){
@@ -222,7 +473,7 @@ else{
 
         // BUG2-FIX: Directories immer anzeigen, unabhängig vom Filter
         if($isDir){
-            $files[]=['name'=>$item,'isDir'=>true,'time'=>(int)@filemtime($full),'size'=>0,'crc'=>''];
+            $files[]=['name'=>$item,'isDir'=>true,'time'=>(int)@filemtime($full),'size'=>0,'crc'=>'','modified'=>''];
             continue;
         }
 
@@ -240,17 +491,16 @@ else{
         }else{$match=stripos($item,$pattern)!==false?1:0;}
 
         if($match){
+            $mtime=(int)@filemtime($full);
             $sz=(int)@filesize($full);
-            $files[]=['name'=>$item,'isDir'=>false,'time'=>(int)@filemtime($full),'size'=>$sz,'crc'=>''];
+            $files[]=['name'=>$item,'isDir'=>false,'time'=>$mtime,'size'=>$sz,'crc'=>'',
+                      'modified'=>date('c',$mtime)]; // v05.01: modified für GrappaOutput
         }
     }
 
     // ── Sortierung ───────────────────────────────────────────────
-    // Dirs immer zuerst, dann nach gewählter Spalte
     usort($files,function($a,$b)use($sortCol,$sortDir,$sortCol2,$sortDir2){
-        // Dirs zuerst
         if($a['isDir']!==$b['isDir']) return $b['isDir']-$a['isDir'];
-        // Beide Dirs oder beide Files: nach Spalte sortieren
         $cmp=function($x,$y,$col){
             return match($col){
                 'size' =>$x['size']<=>$y['size'],
@@ -264,7 +514,6 @@ else{
     });
 
     // ── Duplikat-Erkennung nach Größe (Bytes exakt) ──────────────
-    // Dateien mit gleicher Größe → gelb; nach CRC-Check → hellgrün
     $sizeMap=[];
     foreach($files as $i=>$f){
         if(!$f['isDir']&&$f['size']>0) $sizeMap[$f['size']][]=$i;
@@ -273,16 +522,14 @@ else{
     foreach($sizeMap as $sz=>$idxs){
         if(count($idxs)<2) continue;
         $dupSizes[$sz]=true;
-        // CRC-Check: crc32b über Dateiinhalt
         $crcs=[];
         foreach($idxs as $i){
             $fp=$currentPath.DIRECTORY_SEPARATOR.$files[$i]['name'];
-            if(is_readable($fp)&&$sz<5242880){ // max 5MB für CRC
+            if(is_readable($fp)&&$sz<5242880){
                 $crcs[$i]=hash_file('crc32b',$fp);
                 $files[$i]['crc']=$crcs[$i];
             }
         }
-        // Gleiche CRC → hellgrün-Gruppe
         $crcBuckets=[];
         foreach($crcs as $i=>$c) $crcBuckets[$c][]=$i;
         foreach($crcBuckets as $c=>$cidxs)
@@ -295,18 +542,33 @@ $templates=GrappaFilter::getTemplates();
 $mode=$useRegex?'regex':'text';
 define('SHARE_WARN',51200);
 
+// ── v05.01: GrappaOutput · Non-HTML früh dispatchen ─────────────
+if(GrappaOutput::requested()){
+    $meta = [
+        'schema'    => 'lsfilter-json-api-v01.00',
+        'host'      => $si['host'],
+        'path'      => $relPath ?: '/',
+        'preset'    => $_GET['preset'] ?? null,
+        'pattern'   => $pattern,
+        'count'     => count($files),
+        'generated' => gmdate('c'),
+        'self_url'  => GrappaUrl::absolute(),
+        'lizenz'    => 'AGPL-3.0',
+        'copyright' => 'Copyright (C) 2026 rcpffm',
+    ];
+    GrappaOutput::dispatch($files, $meta);
+}
+
 // Query-String Helfer für Sortier-Links
 function sortUrl(string $col):string{
     global $relPath,$pattern,$mode,$sortCol,$sortDir,$sortCol2,$sortDir2;
     $newDir=($sortCol===$col&&$sortDir==='asc')?'desc':'asc';
-    // Shift-Klick via JS → sortCol2; hier PHP-Link für Primärsortierung
     return '?path='.urlencode($relPath).'&pattern='.urlencode($pattern)
           .'&mode='.urlencode($mode).'&sort='.urlencode($col).'&dir='.urlencode($newDir)
           .($sortCol2?'&sort2='.urlencode($sortCol2).'&dir2='.urlencode($sortDir2):'');
 }
 function sortArrow(string $col):string{
     global $sortCol,$sortDir,$sortCol2,$sortDir2;
-    // Primär: Doppelpfeil fett · Sekundär: Einzelpfeil grau · Inaktiv: ⇅
     if($sortCol===$col){
         $arr=$sortDir==='asc'?'▲▲':'▼▼';
         return '<strong style="color:#e8320a;letter-spacing:-3px">'.$arr.'</strong>';
@@ -330,7 +592,6 @@ validateImportantValues();
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📁</text></svg>">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    /* RWD: fluid · kein fixed width */
     html,body{width:100%;overflow-x:hidden}
     body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:8px;font-size:14px;background:#fff;color:#333;max-width:100vw}
 
@@ -341,6 +602,11 @@ validateImportantValues();
       font-size:11px;color:#666;font-family:monospace;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
     .server-bar a{color:#0066cc}
     .badge-host{font-weight:bold;color:#333}
+
+    /* v05.01: Up-Link */
+    .nav-up-link{display:inline-block;font-size:12px;color:#0066cc;margin-bottom:4px;text-decoration:none;padding:2px 0}
+    .nav-up-link:hover{text-decoration:underline}
+    .nav-current{color:#2e7d32;font-weight:bold;font-size:13px}
 
     .nav-header{background:#f8f8f8;padding:10px;border:1px solid #ddd;border-radius:6px;margin-bottom:8px}
     .nav-path{font-size:11px;color:#888;margin-bottom:6px;font-family:monospace;word-break:break-all}
@@ -358,7 +624,6 @@ validateImportantValues();
     .tpl-label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
     .tpl-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px}
     .tpl-btn{font-size:11px;padding:4px 9px;border-radius:12px;cursor:pointer;white-space:nowrap;border:1px solid #99b;background:#eef;
-      /* BUG1-FIX: größeres Touch-Target + kein focus-Verlust */
       -webkit-tap-highlight-color:rgba(0,0,0,.15);touch-action:manipulation}
     .tpl-btn.grappa{background:#fff0f0;border-color:#d32f2f;color:#d32f2f;font-weight:bold}
     .tpl-btn.bsp{background:#f0fff0;border-color:#4a4;color:#2a6}
@@ -367,78 +632,45 @@ validateImportantValues();
 
     .grappa-badge{display:inline-block;background:#e8320a;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px;font-family:monospace;vertical-align:middle}
 
-    /* ── Tabelle RWD ── */
     table{width:100%;border-collapse:collapse;table-layout:fixed}
-    /* Spaltenbreiten: Name fluid · Größe + Datum fix rechts */
     col.c-name{width:auto}
     col.c-size{width:4.5em}
     col.c-time{width:6em}
 
-    /* Sortierkopf */
-    thead th{
-      padding:8px 6px;border-bottom:2px solid #ddd;
-      font-size:12px;color:#666;text-align:left;
-      cursor:pointer;user-select:none;white-space:nowrap;
-      background:#fafafa;
-    }
+    thead th{padding:8px 6px;border-bottom:2px solid #ddd;font-size:12px;color:#666;text-align:left;
+      cursor:pointer;user-select:none;white-space:nowrap;background:#fafafa;}
     thead th.th-right{text-align:right}
     thead th:hover{background:#f0f0f0}
     thead th.sorted{color:#e8320a;font-weight:bold}
     thead th.sorted2{color:#888;font-style:italic}
-    /* Sortier-Status-Leiste */
     .sort-status{font-size:11px;color:#aaa;margin-bottom:4px;font-family:monospace;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .sort-status .s-chip{background:#f5f5f5;border:1px solid #ddd;border-radius:8px;padding:2px 7px;font-size:11px}
     .sort-status .s-chip.pri{background:#fff0f0;border-color:#e8320a;color:#e8320a}
     .sort-status .s-chip.sec{background:#f5f5f5;border-color:#aaa;color:#666}
     .sort-reset{color:#aaa;font-size:11px;cursor:pointer;text-decoration:underline;border:none;background:none;padding:0}
-    /* Quick-Pattern-Leiste */
     .quick-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
     .quick-btn{font-size:11px;padding:3px 9px;background:#e8f4fd;border:1px solid #9ec;border-radius:12px;cursor:pointer;font-family:monospace;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    /* Hinweis-Box */
     .hint-box{background:#fffde7;border:1px solid #ffe082;border-radius:6px;padding:10px;margin-bottom:6px;font-size:12px;line-height:1.6;display:none}
     .hint-box.open{display:block}
     .hint-toggle{font-size:11px;color:#0066cc;cursor:pointer;border:none;background:none;padding:0;margin-bottom:4px;text-decoration:underline}
-    /* Long-Press-Feedback */
     .long-press-active{background:#fff3e0!important}
 
-    /* Datei-Zeilen */
     tbody tr{cursor:pointer}
     tbody tr:active td{background:#f0f7ff!important}
-
-    td.c-name{
-      padding:11px 6px;
-      border-bottom:1px solid #eee;
-      /* RWD: Name umbricht, nie abgeschnitten */
-      word-break:break-all;
-      overflow-wrap:anywhere;
-      white-space:normal;
-      line-height:1.4;
-    }
-    td.c-size,td.c-time{
-      padding:11px 4px 11px 0;
-      border-bottom:1px solid #eee;
-      text-align:right;
-      font-size:11px;
-      color:#aaa;
-      vertical-align:top;
-      white-space:nowrap;
-    }
-    /* Datum+Uhrzeit: zwei Zeilen */
+    td.c-name{padding:11px 6px;border-bottom:1px solid #eee;word-break:break-all;overflow-wrap:anywhere;white-space:normal;line-height:1.4;}
+    td.c-size,td.c-time{padding:11px 4px 11px 0;border-bottom:1px solid #eee;text-align:right;font-size:11px;color:#aaa;vertical-align:top;white-space:nowrap;}
     .t-date{display:block}
     .t-time{display:block;color:#ccc;font-size:10px}
 
-    /* Datei-Typ-Farben */
     .f-dir {font-weight:bold;color:#d32f2f}
     .f-art {color:#2e7d32;font-weight:bold}
     .f-erl {color:#aaa;text-decoration:line-through}
     .f-file{color:#0066cc}
     .f-big {color:#e65100}
 
-    /* Duplikat-Hervorhebung */
-    tr.dup-size td   {background:#fffde7}          /* gelb: gleiche Größe */
-    tr.dup-crc  td   {background:#e8f5e9!important}/* hellgrün: CRC identisch */
+    tr.dup-size td{background:#fffde7}
+    tr.dup-crc  td{background:#e8f5e9!important}
 
-    /* Modal */
     #overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);z-index:1500}
     .modal{display:none;position:fixed;top:10px;left:8px;right:8px;background:#fff;border:1px solid #ccc;border-radius:12px;
       padding:15px;z-index:2000;box-shadow:0 10px 40px rgba(0,0,0,.3);max-height:88vh;overflow-y:auto}
@@ -495,6 +727,8 @@ validateImportantValues();
     <span class="grappa-badge">GRAPPA</span>
     <?=htmlspecialchars($iv['art_nr'])?> · <?=htmlspecialchars($version)?> · 📁
     <?php
+    // v05.01: Up-Link via GrappaNav · leer wenn root
+    echo $nav->renderUpLink();
     if($relPath){
         echo '<a href="?mode='.htmlspecialchars($mode).'">Root</a>';
         $parts=explode('/',$relPath);$built='';
@@ -502,7 +736,7 @@ validateImportantValues();
             $built.=($built?'/':'').$p;
             echo $i<count($parts)-1
                 ?' / <a href="?path='.urlencode($built).'&mode='.htmlspecialchars($mode).'">'.htmlspecialchars($p).'</a>'
-                :' / '.htmlspecialchars($p);
+                :' / <span class="nav-current">'.htmlspecialchars($p).'</span>';
         }
     }else echo 'Root';
     ?>
@@ -581,7 +815,6 @@ validateImportantValues();
       <div class="tpl-label"><?=$gl?></div>
       <div class="tpl-row">
         <?php foreach($gt as $t):?>
-        <!-- TOUCH-FIX v04.19: data-Attribute + zentraler Dispatcher -->
         <button type="button" class="tpl-btn <?=$t['g']?>"
                 title="<?=htmlspecialchars($t['d'])?>"
                 data-regex="<?=htmlspecialchars($t['r'])?>"
@@ -603,8 +836,6 @@ validateImportantValues();
   </colgroup>
   <thead>
     <tr>
-      <!-- Sortier-Header · Klick = primär · Shift+Klick = sekundär (via JS) -->
-      <!-- TOUCH-FIX v04.19: data-sort + Long-Press für zweite Spalte -->
       <th class="<?=$sortCol==='name'?'sorted':'';?> <?=$sortCol2==='name'?'sorted2':'';?>"
           data-sort="name"
           title="Tippen: sortieren · Lang-drücken (0.5s): zweite Sortierspalte">
@@ -624,7 +855,6 @@ validateImportantValues();
   </thead>
   <tbody>
   <?php foreach($files as $i=>$f):
-    // Typ & Icon
     if($f['isDir'])                            {$cls='f-dir'; $icon='📁';}
     elseif(preg_match(ERL_RE,$f['name']))      {$cls='f-erl'; $icon='🗄';}
     elseif(preg_match(ART_JSON_RE,$f['name'])) {$cls='f-art'; $icon='🔑';}
@@ -638,14 +868,12 @@ validateImportantValues();
     $dt=date('d.m.y',$f['time']);
     $tm=date('H:i',$f['time']);
 
-    // Duplikat-Klassen
     $trCls='';
     if(!$f['isDir']){
-        if(isset($crcGroups[$i]))       $trCls='dup-crc';   // hellgrün: CRC gleich
-        elseif(isset($dupSizes[$s]))    $trCls='dup-size';   // gelb: gleiche Größe
+        if(isset($crcGroups[$i]))    $trCls='dup-crc';
+        elseif(isset($dupSizes[$s])) $trCls='dup-size';
     }
   ?>
-  <!-- TOUCH-FIX v04.19: data-Attribute statt onclick -->
   <tr class="<?=$trCls?>"
       data-name="<?=htmlspecialchars($f['name'],ENT_QUOTES)?>"
       data-isdir="<?=$f['isDir']?'1':'0'?>"
@@ -677,11 +905,6 @@ const scriptPath=<?=json_encode($_SERVER['SCRIPT_NAME']??'/lsfilter.php')?>;
 const dirBase=scriptPath.replace(/\/[^/]+$/,'/');
 const curMode=<?=json_encode($mode)?>;
 
-// ── TOUCH-DISPATCHER · zentrales Touch-Handling ──────────────────
-// Löst das Mobile-Problem: Browser absorbiert Touch-Events für Scroll.
-// Lösung: touchstart merken · bei touchend wenn kein Scroll → Aktion.
-// Gilt für: Datei-Zeilen, Template-Buttons, Sort-Header, Modus-Buttons.
-
 let _touchStartY=0, _touchStartX=0, _longPressTimer=null, _longPressTarget=null;
 const LONG_PRESS_MS=500, SCROLL_THRESHOLD=8;
 
@@ -696,14 +919,13 @@ document.addEventListener('touchstart', e=>{
     _touchStartY=t.clientY; _touchStartX=t.clientX;
     const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
     if(!el) return;
-    // Long-Press nur für Sort-Header
     if(el.dataset.sort){
         _longPressTarget=el;
         _longPressTimer=setTimeout(()=>{
             if(_longPressTarget){
                 el.classList.add('long-press-active');
                 navigator.vibrate&&navigator.vibrate(40);
-                doSort(el.dataset.sort, true); // true = sekundär
+                doSort(el.dataset.sort, true);
                 _longPressTarget=null;
             }
         }, LONG_PRESS_MS);
@@ -714,15 +936,14 @@ document.addEventListener('touchend', e=>{
     clearTimeout(_longPressTimer);
     const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
     if(!el) return;
-    if(_isMoved(e)) { _longPressTarget=null; return; } // Scroll → ignorieren
-    if(_longPressTarget===null&&el.dataset.sort) return; // Long-Press war aktiv
+    if(_isMoved(e)) { _longPressTarget=null; return; }
+    if(_longPressTarget===null&&el.dataset.sort) return;
     e.preventDefault();
     _longPressTarget=null;
     el.classList.remove('long-press-active');
     _dispatch(el);
 }, {passive:false});
 
-// Fallback für Desktop (click)
 document.addEventListener('click', e=>{
     const el=e.target.closest('[data-sort],[data-name],[data-regex],[data-mode-set],[data-close]');
     if(!el) return;
@@ -750,11 +971,9 @@ function _dispatch(el){
     if(el.dataset.sort){ doSort(el.dataset.sort, false); return; }
 }
 
-// ── Modal ──
 function showM(id){document.getElementById(id).style.display='block';document.getElementById('overlay').style.display='block';}
 function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none');document.getElementById('overlay').style.display='none';}
 
-// ── Datei-Menü ──
 function openMenu(name,isDir,size){
     if(isDir){window.location.href='?path='+encodeURIComponent(basePath+name)+'&mode='+encodeURIComponent(curMode);return;}
     selFile=name;selSize=size;
@@ -768,21 +987,18 @@ function openMenu(name,isDir,size){
     showM('actionMenu');
 }
 
-// ── Template anwenden ──
 function applyTpl(regex,forceMode){
     document.getElementById('pIn').value=regex;
     if(forceMode) document.getElementById('modeIn').value=forceMode;
     document.getElementById('ff').submit();
 }
 
-// ── Modus-Umschalter ──
 function setMode(m){
     document.getElementById('modeIn').value=m;
     document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.modeSet===m));
     document.getElementById('ff').submit();
 }
 
-// ── Sortierung · sekundaer=true → Long-Press / false → Tap ──
 function doSort(col,sekundaer){
     const f=document.getElementById('ff');
     const s1=f.querySelector('[name=sort]');
@@ -790,20 +1006,16 @@ function doSort(col,sekundaer){
     const s2=f.querySelector('[name=sort2]');
     const d2=f.querySelector('[name=dir2]');
     if(sekundaer){
-        // Long-Press: zweite Sortierspalte setzen oder zurücksetzen
-        if(s2.value===col){ s2.value='';d2.value='asc'; } // nochmal = Reset
+        if(s2.value===col){ s2.value='';d2.value='asc'; }
         else { s2.value=col; d2.value='asc'; }
     }else{
-        // Tap: primäre Sortierung
         const nd=(s1.value===col&&d1.value==='asc')?'desc':'asc';
         s1.value=col;d1.value=nd;
-        // Primäre = sekundäre? → sekundäre löschen
         if(s2.value===col){s2.value='';d2.value='asc';}
     }
     f.submit();
 }
 
-// ── Aktionen ──
 async function doAct(type){
     const fileUrl=window.location.origin+dirBase+basePath+selFile;
     const rawUrl=scriptPath+'?path='+encodeURIComponent(<?=json_encode($relPath)?>)+'&raw='+encodeURIComponent(selFile);
@@ -839,7 +1051,6 @@ async function doAct(type){
 
 function showErr(m){alert('⚠ '+m);console.error('GRAPPA lsfilter:',m);}
 
-// Volltext-Suche im Dateiinhalt
 document.addEventListener('DOMContentLoaded',()=>{
     const st=document.getElementById('searchTerm');
     if(!st) return;
