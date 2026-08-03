@@ -23,7 +23,11 @@ https://t.me/KI_AI_rcpffm
 
 and a channel fpr exchanging objects, e.g short videos taken and infos
 
-https://t.me/ch01rcpffm
+https://t.me/s/ch01rcpffm
+(view without Telegram account, add comments with one)
+Find more there.
+ask how to get the full access to my Grappa project, descriptions and results.
+‼️ all COMPLETELY AGPL 3.0  ‼️ 
 
 
 
