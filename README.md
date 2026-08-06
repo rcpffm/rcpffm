@@ -21,14 +21,15 @@ and a public  AI / KI CHANNEL:
 
 https://t.me/KI_AI_rcpffm
 
-and a channel fpr exchanging objects, e.g short videos taken and infos
+and a channel for exchanging Infos, questions, answers, objects,e.g short videos taken 
 
 https://t.me/s/ch01rcpffm
-(view without Telegram account, add comments with one)
+
+(view the content there even without Telegram account, and add comments with one)
 Find more there.
+
 ask how to get the full access to my Grappa project, descriptions and results.
 ‼️ all COMPLETELY AGPL 3.0  ‼️ 
-
 
 
 <!---
